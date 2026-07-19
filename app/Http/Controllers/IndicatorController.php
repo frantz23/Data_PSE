@@ -88,7 +88,7 @@ class IndicatorController extends Controller
 
     public function indexIndicator(): View
     {
-        $indicators = Indicator::orderBy('created_at', 'desc')->paginate(5);
+        $indicators = Indicator::where('organization_id',auth()->user()->organization_id)->paginate(5);
         return view('ownpage.indicatorViews.index', ['indicators' => $indicators]);
     }
 
