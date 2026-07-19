@@ -1,0 +1,41 @@
+.hero .container{
+    font-weight: bold;
+    font-size: 30px;
+    padding: 10px;
+
+    background: linear-gradient(
+        135deg,
+        #000000 0%,
+        #1a0000 40%,
+        #8B0000 100%
+    );
+    color: white;
+
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.organization{
+    margin-top: 20px;
+}
+
+
+
+.rolebtn{
+   
+    border: #1a0000 1px solid;
+    padding: 10px;
+    text-decoration: none;
+    color: #8B0000;
+    border-radius: 10px;
+}
+
+.rolebtn:hover{
+ background: linear-gradient(
+        135deg,
+        #000000 0%,
+        #1a0000 40%,
+        #8B0000 100%
+    );
+    color: white;
+}
