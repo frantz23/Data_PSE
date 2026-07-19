@@ -5,6 +5,7 @@ namespace App\Providers;
 use EsperoSoft\Artisan\Console\Commands\MakeCrudCommand;
 use EsperoSoft\Artisan\Console\Commands\MakeEntityCommand;
 use EsperoSoft\Artisan\Console\Commands\MakeServiceCommand;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +29,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
+         if (app()->environment('production')) {
+        URL::forceScheme('https');
+    }
     }
 }
