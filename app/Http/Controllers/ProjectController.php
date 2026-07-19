@@ -47,7 +47,7 @@ class ProjectController extends Controller
         $data['organization_id'] = auth()->user()->organization_id;
         $data['user_id'] = auth()->id();
         $data['code']= Project::generateCode();
-        
+
 
         $project = Project::create($data);
         return redirect()->route('admin.project.show', ['id' => $project->id]);
@@ -57,7 +57,7 @@ class ProjectController extends Controller
     {
         $data = $req->validated();
 
-        
+
 
         $project->update($data);
 
@@ -80,7 +80,7 @@ class ProjectController extends Controller
 
     public function delete(Project $project)
     {
-        
+
         $project->delete();
 
         return [
@@ -89,7 +89,7 @@ class ProjectController extends Controller
     }
     public function indexProject(): View
     {
-        $projects = Project::orderBy('created_at', 'desc')->paginate(5);
+        $projects = Project::where('organization_id', auth()->user()->organization_id)->paginate(12);
         return view('ownpage.projectViews.index', ['projects' => $projects]);
     }
     public function showProject($id): View
@@ -120,7 +120,7 @@ class ProjectController extends Controller
         $data['organization_id'] = auth()->user()->organization_id;
         $data['user_id'] = auth()->id();
         $data['code']= Project::generateCode();
-        
+
 
         $project = Project::create($data);
         return redirect()->route('showProject', ['id' => $project->id]);
@@ -130,11 +130,11 @@ class ProjectController extends Controller
     {
         $data = $req->validated();
 
-        
+
 
         $project->update($data);
 
         return redirect()->route('admin.project.show', ['id' => $project->id]);
     }
-    
+
 }
