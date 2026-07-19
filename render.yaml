@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: data-pse
+    runtime: docker
+    plan: free
+    branch: main
+    autoDeploy: true
+
+    envVars:
+      - key: APP_ENV
+        value: production
+
+      - key: APP_DEBUG
+        value: false
+
+      - key: LOG_CHANNEL
+        value: stack
