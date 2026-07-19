@@ -88,7 +88,7 @@ Home
 
             <!-- RIGHT -->
             <div class="col-lg-6 text-center">
-                <img src="{{ asset('storage/heroImg.png') }}"
+                <img src="{{ asset('images/heroImg.png') }}"
                     class="hero-image"
                     alt="Data PSE">
             </div>
