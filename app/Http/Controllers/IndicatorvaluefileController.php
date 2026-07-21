@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IndicatorvaluefileFormRequest;
 use App\Models\IndicatorValue;
-use App\Models\Indicatorvaluefile;
+use App\Models\IndicatorValueFile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
