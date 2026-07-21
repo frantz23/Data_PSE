@@ -16,7 +16,7 @@
                     <div class="card-body">
 
                         <h5 class="mb-3 fw-bold">
-                            <a href="{{ route('dashboard') }}" class="btn rounded-3 border-light text-light d-left">
+                            <a href="{{ route('dashboard') }}" class="btn rounded-3 border-light text-dark d-left">
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 Menu Admin ONG
                             </a>
@@ -26,7 +26,7 @@
                         <ul class="list-group list-group-flush">
 
                             <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">
+                                <a href="{{ route('indexDash') }}" class="text-decoration-none">
                                     📊 Dashboard
                                 </a>
                             </li>
@@ -97,7 +97,7 @@
                             @forelse($indicators as $indicator)
                                 {{-- {{ $progress =
                                 $indicator->target > 0 ? min(100, round(($indicator->current_value / $indicator->target) * 100)) : 0 }} --}}
-                                <div class="col-md-6 col-xl-4">
+                                <div class="col-md-6 col-xl-4 gy-4">
                                     <div class="card border-0 shadow-sm indicator-card h-100">
                                         <div class="card-body d-flex flex-column justify-between">
 

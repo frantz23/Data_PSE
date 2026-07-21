@@ -39,7 +39,8 @@
                         </div>
                     @enderror
                 </div>
-                <div class="mb-3">
+                @if ($indicator->data_type == 'qualitatif')
+                    <div class="mb-3">
                     <label for="value_text" class="form-label">Value_text</label>
                     <input type="text" placeholder="Value_text ..." name="value_text"
                         value="{{ old('value_text', isset($indicatorvalue) ? $indicatorvalue->value_text : '') }}"
@@ -51,6 +52,9 @@
                         </div>
                     @enderror
                 </div>
+                @endif
+
+
                 <div class="mb-3">
                     <label for="reporting_date" class="form-label">Reporting_date</label>
                     <input type="date" placeholder="Reporting_date ..." name="reporting_date"

@@ -24,7 +24,7 @@ class ProjectFormRequest extends FormRequest
         $isRequired = request()->isMethod("POST") ?"required|": "";
         return [
             //
-            'name' => $isRequired.'string',
+            'name' => $isRequired.'string|unique',
 			// 'code' => $isRequired.'string',
 			'description' => $isRequired.'string',
 			'budget' => $isRequired.'nullable|numeric',
@@ -32,13 +32,13 @@ class ProjectFormRequest extends FormRequest
 			'end_date' => $isRequired.'nullable|date|after_or_equal:start_date',
 			'status' => $isRequired.'in:draft,active,completed,suspended',
             'program_id' => $isRequired.'exists:programs,id'
-			
+
         ];
     }
     public function prepareForValidation()
     {
         $this->merge([
-            
+
         ]);
     }
 }

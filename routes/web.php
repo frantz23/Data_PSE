@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\DashController;
 use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\IndicatorvalueController;
 use App\Http\Controllers\IndicatorvaluefileController;
@@ -107,6 +108,10 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     //IVF
     Route::get('/indicatorvaluefiles/{indicatorValue}/create/file', [IndicatorvaluefileController::class, 'createIVFile'])->name('createIVFile');
     Route::post('/indicatorvaluefiles/store', [IndicatorvaluefileController::class, 'storeIVFile'])->name('storeIVFile');
+
+    //Project resume (dashboard)
+    Route::get('/dash', [DashController::class, 'indexDash'])->name('indexDash');
+    Route::get('/dashProject/{id}', [DashController::class, 'dashProject'])->name('dashProject');
 
 });
 

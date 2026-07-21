@@ -192,7 +192,7 @@
                         <small class="text-muted">
 
                             Formats autorisés :
-                            PDF, Word, Excel, Images, ZIP
+                            PDF, Word, Excel, Images, ZIP (10Mo Max)
 
                         </small>
 

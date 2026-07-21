@@ -1,109 +1,108 @@
     @section('styles')
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @endsection
-    <div class="row">
-        <div class="col-md-8">
-            <form
-                action="{{ isset($indicatorvalue) ? route('updateIndicatorValue', ['indicatorvalue' => $indicatorvalue->id]) : route('storeIndicatorValue') }}"
-                method="POST">
-                @csrf
-                @if (isset($indicatorvalue))
-                    @method('PUT')
-                @endif
-                <div class="mb-3">
-                    <label for="indicator_id" class="form-label">Indicateur</label>
-                    {{-- <select name="indicator_id" class="form-select form-select-sm" required>
-                        <option value="" selected disabled>Choisir l'indicateur</option>
-                        @foreach ($indicators as $indicator)
-                            <option value="{{ $indicator->id }}">
-                                [{{ $indicator->code }}] {{ $indicator->name }}
-                            </option>
-                        @endforeach
-                    </select> --}}
-
-                    <!-- 1. L'ID envoyé en arrière-plan au serveur -->
-                    <input type="hidden" name="indicator_id" value="
-                    {{ isset($indicatorvalue) ? $indicatorvalue->indicator_id : $indicator->id }}
-                    ">
-
-                    <!-- 2. Le nom affiché proprement à l'utilisateur -->
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Indicateur sélectionné</label>
-                        <input type="text" class="form-control bg-light"
-                            value="[{{ $indicator->code }}] {{ $indicator->name }}" readonly disabled>
-                    </div>
-
-                    @error('indicator_id')
-                        <div class="error text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm">
+                <!-- Entête de la carte -->
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        {{ isset($indicatorvalue) ? 'Modifier la valeur' : 'Ajouter une valeur' }}
+                    </h5>
+                    <a href="{{ route('showIndicator', $indicator->id) }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left"></i> Annuler
+                    </a>
                 </div>
-                <div class="mb-3">
-                    <label for="value_numeric" class="form-label">Value_numeric</label>
-                    <input type="number" placeholder="Value_numeric ..." name="value_numeric"
-                        value="{{ old('value_numeric', isset($indicatorvalue) ? $indicatorvalue->value_numeric : '') }}"
-                        class="form-control" id="value_numeric" aria-describedby="value_numericHelp" required />
 
-                    @error('value_numeric')
-                        <div class="error text-danger">
-                            {{ $message }}
+                <!-- Corps du formulaire -->
+                <div class="card-body p-4">
+                    <form
+                        action="{{ isset($indicatorvalue) ? route('updateIndicatorValue', ['indicatorvalue' => $indicatorvalue->id]) : route('storeIndicatorValue') }}"
+                        method="POST">
+                        @csrf
+                        @if (isset($indicatorvalue))
+                            @method('PUT')
+                        @endif
+
+                        <!-- 1. ID envoyé en arrière-plan (sans espaces parasites) -->
+                        <input type="hidden" name="indicator_id"
+                            value="{{ old('indicator_id', $indicatorvalue->indicator_id ?? $indicator->id) }}">
+
+                        <!-- 2. Affichage en lecture seule de l'indicateur concerné -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Indicateur sélectionné</label>
+                            <input type="text" class="form-control bg-light"
+                                value="[{{ $indicator->code }}] {{ $indicator->name }}" readonly disabled>
+                            @error('indicator_id')
+                                <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
                         </div>
-                    @enderror
+
+                        <div class="row g-3">
+                            <!-- Date de rapport -->
+                            <div class="col-md-6">
+                                <label for="reporting_date" class="form-label fw-semibold">Date de suivi / rapport <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="reporting_date" id="reporting_date"
+                                    value="{{ old('reporting_date', isset($indicatorvalue->reporting_date) ? \Carbon\Carbon::parse($indicatorvalue->reporting_date)->format('Y-m-d') : date('Y-m-d')) }}"
+                                    class="form-control @error('reporting_date') is-invalid @enderror" required />
+                                @error('reporting_date')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Valeur Numérique -->
+                            @if ($indicator->data_type == 'quantitatif')
+                                <div class="col-md-6">
+                                    <label for="value_numeric" class="form-label fw-semibold">Valeur numérique</label>
+                                    <input type="number" step="any" placeholder="Ex: 150" name="value_numeric"
+                                        id="value_numeric"
+                                        value="{{ old('value_numeric', $indicatorvalue->value_numeric ?? '') }}"
+                                        class="form-control @error('value_numeric') is-invalid @enderror" />
+                                    @error('value_numeric')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @endif
+
+                            <!-- Valeur Textuelle -->
+                            @if ($indicator->data_type == 'qualitatif')
+                                <div class="col-12">
+                                    <label for="value_text" class="form-label fw-semibold">Valeur textuelle /
+                                        qualitative</label>
+                                    <input type="text" placeholder="Ex: Objectif atteint, En cours..."
+                                        name="value_text" id="value_text"
+                                        value="{{ old('value_text', $indicatorvalue->value_text ?? '') }}"
+                                        class="form-control @error('value_text') is-invalid @enderror" />
+                                    @error('value_text')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @endif
+
+                            <!-- Commentaire -->
+                            <div class="col-12">
+                                <label for="comment" class="form-label fw-semibold">Commentaire / Remarques</label>
+                                <textarea name="comment" id="comment" rows="3" placeholder="Saisir des remarques ou observations..."
+                                    class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $indicatorvalue->comment ?? '') }}</textarea>
+                                @error('comment')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Boutons d'action -->
+                        <div class="d-flex justify-content-end gap-2 pt-4 mt-3 border-top">
+                            <a href="{{ route('showIndicator', $indicator->id) }}" class="btn btn-light border px-4">
+                                Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                {{ isset($indicatorvalue) ? 'Mettre à jour' : 'Enregistrer' }}
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="value_text" class="form-label">Value_text</label>
-                    <input type="text" placeholder="Value_text ..." name="value_text"
-                        value="{{ old('value_text', isset($indicatorvalue) ? $indicatorvalue->value_text : '') }}"
-                        class="form-control" id="value_text" aria-describedby="value_textHelp" required />
-
-                    @error('value_text')
-                        <div class="error text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <label for="reporting_date" class="form-label">Reporting_date</label>
-                    <input type="date" placeholder="Reporting_date ..." name="reporting_date"
-                        value="{{ old('reporting_date', isset($indicatorvalue) ? $indicatorvalue->reporting_date : '') }}"
-                        class="form-control" id="reporting_date" aria-describedby="reporting_dateHelp" required />
-
-                    @error('reporting_date')
-                        <div class="error text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                <div class="mb-3">
-                    <label for="comment" class="form-label">Comment</label>
-                    <input type="text" placeholder="Comment ..." name="comment"
-                        value="{{ old('comment', isset($indicatorvalue) ? $indicatorvalue->comment : '') }}"
-                        class="form-control" id="comment" aria-describedby="commentHelp" required />
-
-                    @error('comment')
-                        <div class="error text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                {{-- <div class="mb-3">
-                    <label for="validated" class="form-label">Validated</label>
-                    <input type="text" placeholder="Validated ..." name="validated"
-                        value="{{ old('validated', isset($indicatorvalue) ? $indicatorvalue->validated : '') }}"
-                        class="form-control" id="validated" aria-describedby="validatedHelp" required />
-
-                    @error('validated')
-                        <div class="error text-danger">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>  --}}
-                <a href="{{ route('showIndicator', $indicator->id) }}" class="btn btn-danger mt-1">
-                    Cancel
-                </a>
-                <button class="btn btn-primary mt-1"> {{ isset($indicatorvalue) ? 'Update' : 'Create' }}</button>
-            </form>
+            </div>
         </div>
     </div>
 

@@ -24,8 +24,8 @@ class IndicatorvalueFormRequest extends FormRequest
         $isRequired = request()->isMethod("POST") ?"required|": "";
         return [
             //
-            'value_numeric' => $isRequired.'numeric|nullable',
-			'value_text' => $isRequired.'string|nullable',
+            'value_numeric' => 'numeric|nullable',
+			'value_text' => 'string|nullable',
 			'reporting_date' => $isRequired.'date',
 			'comment' => $isRequired.'string',
             'indicator_id' => $isRequired.'exists:indicators,id'

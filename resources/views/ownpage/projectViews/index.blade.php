@@ -16,7 +16,7 @@
                     <div class="card-body">
 
                         <h5 class="mb-3 fw-bold">
-                            <a href="{{ route('dashboard') }}" class="btn rounded-3 border-light text-light d-left">
+                            <a href="{{ route('dashboard') }}" class="btn rounded-3 border-light text-dark d-left">
                                 <i class="bi bi-grid-1x2-fill"></i>
                                 Menu Admin ONG
                             </a>
@@ -26,7 +26,7 @@
                         <ul class="list-group list-group-flush">
 
                             <li class="list-group-item">
-                                <a href="#" class="text-decoration-none">
+                                <a href="{{ route('indexDash') }}" class="text-decoration-none">
                                     📊 Dashboard
                                 </a>
                             </li>

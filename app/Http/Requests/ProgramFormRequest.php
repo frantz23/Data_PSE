@@ -24,7 +24,7 @@ class ProgramFormRequest extends FormRequest
         $isRequired = request()->isMethod("POST") ?"required|": "";
         return [
             //
-            'name' => $isRequired.'string',
+            'name' => $isRequired.'string|unique',
 			// 'code' => $isRequired.'string',
 			'description' => 'nullable|string',
 			'budget' => $isRequired.'numeric',
@@ -34,13 +34,13 @@ class ProgramFormRequest extends FormRequest
 			'start_date' => $isRequired.'nullable|date',
 			'end_date' => $isRequired.'nullable|date|after_or_equal:start_date',
 			'status' => $isRequired.'in:draft,active,completed,suspended'
-			
+
         ];
     }
     public function prepareForValidation()
     {
         $this->merge([
-            
+
         ]);
     }
 }
