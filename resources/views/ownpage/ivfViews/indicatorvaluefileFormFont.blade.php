@@ -216,7 +216,7 @@
 
                 <div class="card-footer text-end">
 
-                    <a href="{{ route('admin.indicatorvalue.index') }}"
+                    <a href="{{ route('showIndicatorValue', $indicatorValue->id) }}"
                        class="btn btn-secondary">
 
                         Annuler

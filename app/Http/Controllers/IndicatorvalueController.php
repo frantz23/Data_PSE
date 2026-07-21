@@ -95,7 +95,7 @@ class IndicatorvalueController extends Controller
 
     public function showIndicatorValue($id): View
     {
-        $indicatorValue = Indicatorvalue::findOrFail($id);
+        $indicatorValue = IndicatorValue::findOrFail($id);
         // Charge l'indicateur avec tous ses fichiers rattachés
         $indicatorValue->load('indicatorvaluefiles');
         return view('ownpage.indicatorValuesViews.show', ['indicatorValue' => $indicatorValue]);

@@ -134,7 +134,7 @@ class ProjectController extends Controller
 
         $project->update($data);
 
-        return redirect()->route('admin.project.show', ['id' => $project->id]);
+        return redirect()->route('showProject', ['id' => $project->id]);
     }
 
 }
