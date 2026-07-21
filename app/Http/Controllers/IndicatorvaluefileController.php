@@ -59,7 +59,7 @@ class IndicatorvaluefileController extends Controller
             );
             // dd($req->file);
 
-            Indicatorvaluefile::create([
+            IndicatorValueFile::create([
                 'indicator_value_id' => $validated['indicator_value_id'],
                 'file_name'          => $file->getClientOriginalName(),
                 'file_path'          => $path,
