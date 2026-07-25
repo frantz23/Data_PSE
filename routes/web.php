@@ -46,7 +46,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/organizations/store', [OrganizationController::class, 'storeOrganization'])->name('storeOrganization');
     Route::put('/organizations/update/{organization}', [OrganizationController::class, 'updateOrganization'])->name('updateOrganization');
     Route::delete('/organizations/delete/{organization}', [OrganizationController::class, 'deleteOrganization'])->name('deleteOrganization');
-    Route::get('/organization', [OrganizationController::class, 'indexOrganization'])->name('indexOrganization');
     Route::get('/organization/assignRole', [OrganizationController::class, 'assignView'])->name('assignView');
     Route::post('/roles/assign', [OrganizationController::class, 'assign'])->name('assignOrganizationRole');
     Route::get('/organization/{organization}/users', [OrganizationController::class, 'getUsers'])

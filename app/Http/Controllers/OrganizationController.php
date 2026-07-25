@@ -40,8 +40,6 @@ class OrganizationController extends Controller
     {
         $data = $req->validated();
 
-
-
         $organization = Organization::create($data);
         return redirect()->route('admin.organization.show', ['id' => $organization->id]);
     }
@@ -112,7 +110,10 @@ class OrganizationController extends Controller
     {
         $data = $req->validated();
 
-
+        // Gestion de l'upload du logo si présent
+        if ($req->hasFile('logo')) {
+            $data['logo'] = $req->file('logo')->store('logos', 'public');
+        }
 
         $organization = Organization::create($data);
         return redirect()->route('showOrganization', ['id' => $organization->id]);
@@ -122,7 +123,10 @@ class OrganizationController extends Controller
     {
         $data = $req->validated();
 
-
+        // Gestion de l'upload du logo si présent
+        if ($req->hasFile('logo')) {
+            $data['logo'] = $req->file('logo')->store('logos', 'public');
+        }
 
         $organization->update($data);
 
@@ -130,14 +134,24 @@ class OrganizationController extends Controller
     }
 
     public function deleteOrganization(Organization $organization)
-    {
+{
+    try {
+        // Optionnel : détacher les relations avant de supprimer si nécessaire
+        // $organization->users()->detach();
 
         $organization->delete();
 
-        return [
-            'isSuccess' => true
-        ];
+        return response()->json([
+            'isSuccess' => true,
+            'message' => 'Organisation supprimée avec succès.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'isSuccess' => false,
+            'message' => 'Impossible de supprimer cette organisation car elle est liée à d\'autres données.'
+        ], 500);
     }
+}
 
     public function assignView(): View
     {
