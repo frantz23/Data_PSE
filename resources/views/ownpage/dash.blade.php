@@ -94,28 +94,36 @@ Project Resume
 
     <!-- 2. BARRE DE RECHERCHE ET FILTRES -->
     <div class="card border-0 shadow-sm mb-4">
-        <div class="card-body p-3">
-            <form action="{{ route('indexProject') }}" method="GET" class="row g-2 align-items-center">
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
-                        <input type="text" name="search" class="form-control border-start-0" placeholder="Rechercher un projet par nom ou code..." value="{{ request('search') }}">
-                    </div>
+    <div class="card-body p-3">
+        <form action="{{ route('indexProjectSearch') }}" method="GET" class="row g-2 align-items-center">
+
+            <!-- Champ Recherche -->
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" class="form-control border-start-0" placeholder="Rechercher un projet par nom ou code..." value="{{ request('search') }}">
                 </div>
-                <div class="col-md-4">
-                    <select name="status" class="form-select" onchange="this.form.submit()">
-                        <option value="">Tous les statuts</option>
-                        <option value="in_progress" {{ request('status') == 'active' ? 'selected' : '' }}>En cours</option>
-                        <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Terminé</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>En attente</option>
-                    </select>
-                </div>
-                <div class="col-md-2 text-end">
-                    <button type="submit" class="btn btn-outline-secondary w-100">Filtrer</button>
-                </div>
-            </form>
-        </div>
+            </div>
+
+            <!-- Filtre Statut -->
+            <div class="col-md-4">
+                <select name="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">Tous les statuts</option>
+                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Brouillon</option>
+                    <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>En cours</option>
+                    <option value="completed" {{ request('status') == 'completed' ? 'selected' : '' }}>Terminé</option>
+                    <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>En attente / Suspendu</option>
+                </select>
+            </div>
+
+            <!-- Bouton de soumission -->
+            <div class="col-md-2 text-end">
+                <button type="submit" class="btn btn-outline-secondary w-100">Filtrer</button>
+            </div>
+
+        </form>
     </div>
+</div>
 
     <!-- 3. GRILLE DES CARTES DE PROJETS -->
     <div class="row g-4">

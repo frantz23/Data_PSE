@@ -72,6 +72,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
 
     //Projects
     Route::get('/projects', [ProjectController::class, 'indexProject'])->name('indexProject');
+    Route::get('/projects/search', [ProjectController::class, 'indexProjectSearch'])->name('indexProjectSearch');
     Route::get('/projects/show/{id}', [ProjectController::class, 'showProject'])->name('showProject');
     Route::get('/projects/create', [ProjectController::class, 'createProject'])->name('createProject');
     Route::get('/projects/edit/{id}', [ProjectController::class, 'editProject'])->name('editProject');

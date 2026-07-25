@@ -137,4 +137,30 @@ class ProjectController extends Controller
         return redirect()->route('showProject', ['id' => $project->id]);
     }
 
+
+public function indexProjectSearch(Request $request)
+{
+    $query = Project::query();
+
+    // 1. Filtrer par texte (recherche par nom ou code)
+    if ($request->filled('search')) {
+        $search = $request->input('search');
+        $query->where(function($q) use ($search) {
+            $q->where('name', 'like', "%{$search}%")
+              ->orWhere('code', 'like', "%{$search}%");
+        });
+    }
+
+    // 2. Filtrer par statut exact
+    if ($request->filled('status')) {
+        $query->where('status', $request->input('status'));
+    }
+
+    // On récupère les résultats filtrés (avec pagination)
+    // withQueryString() permet de garder les paramètres search/status lors du changement de page
+    $projects = $query->latest()->paginate(10)->withQueryString();
+
+    return view('ownpage.projectViews.index', compact('projects'));
+}
+
 }
