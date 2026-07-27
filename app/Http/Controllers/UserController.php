@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\UserFormRequest;
 use App\Models\Organization;
+use App\Models\User;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
@@ -143,4 +145,76 @@ class UserController extends Controller
         ];
     }
 
+    public function indexUserOrg(): View
+    {
+        $authUser = auth()->user()->organization_id;
+        $organizations = Organization::all();
+        $users = User::where('organization_id', $authUser)->paginate(5);
+        return view('ownpage.userViews.indexOrg', ['users' => $users, 'organizations' => $organizations]);
+    }
+
+    public function showUserOrg($id): View
+    {
+        $user = User::findOrFail($id);
+
+        return view('ownpage.userViews.showOrg', ['user' => $user]);
+    }
+
+    public function editUserOrg($id): View
+    {
+        $authUser = auth()->user()->organization_id;
+        $organizations = Organization::where('id', $authUser)->get();
+
+
+        $user = User::findOrFail($id);
+        return view('ownpage.userViews.editOrg', ['user' => $user, 'organizations' => $organizations]);
+    }
+
+    public function createUserOrg(): View
+    {
+        $authUser = auth()->user()->organization_id;
+        $organizations = Organization::where('id', $authUser)->get();
+
+        return view('ownpage.userViews.createOrg', ['organizations' => $organizations]);
+    }
+
+    public function storeUserOrg(UserFormRequest $req): RedirectResponse
+    {
+        $data = $req->validated();
+        $data['organization_id'] = auth()->user()->organization_id;
+
+        $user = User::create($data);
+        return redirect()->route('showUserOrg', ['id' => $user->id]);
+    }
+
+    public function updateUserOrg(User $user, UserFormRequest $req)
+    {
+        $data = $req->validated();
+
+        $user->update($data);
+
+        return redirect()->route('showUserOrg', ['id' => $user->id]);
+    }
+
+
+    public function deleteUserOrg(User $user): JsonResponse
+    {
+        try {
+            // Suppression de l'utilisateur
+            $user->delete();
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'L\'utilisateur a été supprimé avec succès.'
+            ], 200);
+
+        } catch (Exception $e)
+        {
+            // Intercepte l'erreur (ex: contrainte de clé étrangère SQL)
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => 'Impossible de supprimer cet utilisateur car il est lié à d\'autres données dans le système.'
+            ], 400); // 400 Bad Request
+        }
+    }
 }

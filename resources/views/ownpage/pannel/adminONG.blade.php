@@ -55,7 +55,7 @@
                         </li>
 
                         <li class="list-group-item">
-                            <a href="#" class="text-decoration-none">
+                            <a href="{{ route('indexUserOrg') }}" class="text-decoration-none">
                                 👥 Users
                             </a>
                         </li>

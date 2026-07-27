@@ -113,6 +113,16 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/dash', [DashController::class, 'indexDash'])->name('indexDash');
     Route::get('/dashProject/{id}', [DashController::class, 'dashProject'])->name('dashProject');
 
+    //User organization
+    Route::get('/adminONG/users', [UserController::class, 'indexUserOrg'])->name('indexUserOrg');
+    Route::get('/adminONG/users/show/{id}', [UserController::class, 'showUserOrg'])->name('showUserOrg');
+    Route::get('/adminONG/users/create', [UserController::class, 'createUserOrg'])->name('createUserOrg');
+    Route::get('/adminONG/users/edit/{id}', [UserController::class, 'editUserOrg'])->name('editUserOrg');
+    Route::post('/adminONG/users/store', [UserController::class, 'storeUserOrg'])->name('storeUserOrg');
+    Route::put('/adminONG/users/update/{user}', [UserController::class, 'updateUserOrg'])->name('updateUserOrg');
+    Route::delete('/adminONG/users/delete/{user}', [UserController::class, 'deleteUserOrg'])->name('deleteUserOrg');
+
+
 });
 
 require __DIR__ . '/auth.php';
