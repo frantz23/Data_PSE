@@ -24,11 +24,11 @@
                             </a>
                         </li>
 
-                        <li class="list-group-item">
+                        {{-- <li class="list-group-item">
                             <a href="#" class="text-decoration-none">
                                 🏢 Organization
                             </a>
-                        </li>
+                        </li> --}}
 
                         <li class="list-group-item">
                             <a href="{{ route('indexProgram') }}" class="text-decoration-none">
