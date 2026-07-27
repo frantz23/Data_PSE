@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProjectFormRequest;
 use App\Models\Program;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Throwable;
 
 class ProjectController extends Controller
 {
@@ -162,5 +165,35 @@ public function indexProjectSearch(Request $request)
 
     return view('ownpage.projectViews.index', compact('projects'));
 }
+
+
+    /**
+     * Supprime un projet spécifique.
+     *
+     * @param Project $project
+     * @return JsonResponse
+     */
+    public function deleteProject(Project $project): JsonResponse
+    {
+        try {
+            // 1. Suppression du projet
+            $project->delete();
+
+            // 2. Retour de la réponse de succès pour AJAX
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'Le projet a été supprimé avec succès.'
+            ], 200);
+
+        } catch (Throwable $e) {
+            // Enregistrement de l'erreur exacte dans storage/logs/laravel.log
+            Log::error('Erreur suppression projet #' . $project->id . ': ' . $e->getMessage());
+
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => 'Impossible de supprimer ce projet car il contient des données liées (ex: indicateurs).'
+            ], 400);
+        }
+    }
 
 }

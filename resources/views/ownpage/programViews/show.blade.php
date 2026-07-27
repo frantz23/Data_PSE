@@ -58,7 +58,7 @@
                         <i class="bi bi-pencil me-1"></i> Modifier
                     </a>
                 @endif
-                <button type="button" data-id="{{ $program->id }}"
+                <button type="button" data-id="{{ $program->id }}" data-name="{{ $program->name }}"
                     class="btn btn-outline-danger btn-sm rounded-pill px-3 deleteBtn">
                     <i class="bi bi-trash me-1"></i> Supprimer
                 </button>
@@ -188,214 +188,95 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal de confirmation de suppression -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title fs-5" id="confirmModalLabel">Delete confirm</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fs-5" id="confirmModalLabel">Confirmation de suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
                     ...
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary confirmDeleteAction">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger confirmDeleteAction">Supprimer</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- SCRIPT JS -->
     <script>
-        const checkboxs = document.querySelectorAll('input[type="checkbox"]')
-
-        checkboxs.forEach((checkbox) => {
-
-            checkbox.onchange = async (event) => {
-                const {
-                    checked,
-                    name,
-                    dataset
-                } = event.target;
-                const {
-                    id
-                } = dataset;
-                console.log({
-                    checked,
-                    name,
-                    id
-                });
-                const data = {
-                    [name]: checked.toString()
-                };
-                const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-                const response = await fetch('programs/speed/' + id, {
-                    method: 'PUT',
-                    body: JSON.stringify(
-                        data), // Utilisation de JSON.stringify au lieu de JSON.stringfy
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-            };
-        })
-
-        const deleteButtons = document.querySelectorAll('.deleteBtn')
-        deleteButtons.forEach(deleteButton => {
-            deleteButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                const {
-                    id,
-                    title
-                } = deleteButton.dataset
-                const modalBody = document.querySelector('.modal-body')
-                modalBody.innerHTML = `Are you sure you want to delete this data ?</strong> `
-                console.log({
-                    id,
-                    title
-                });
-                const modal = new bootstrap.Modal(document.querySelector('#confirmModal'))
-                modal.show()
-                const confirmDeleteBtn = document.querySelector('.confirmDeleteAction')
-
-                confirmDeleteBtn.addEventListener('click', async () => {
-                    const csrfToken = document.head.querySelector('meta[name="csrf-token"]')
-                        .content;
-                    const response = await fetch('programs/delete/' + id, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    })
-
-                    const result = await response.json()
-
-                    if (result && result.isSuccess) {
-                        window.location.href = window.location.href;
-                    }
-
-
-                    modal.hide()
-                })
-            })
-
-        });
         document.addEventListener('DOMContentLoaded', function() {
-            const tableHeaders = document.querySelectorAll('#Program th');
-            const columnSelector = document.getElementById('columnSelector');
 
-            tableHeaders.forEach(function(header, index) {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                const div = document.createElement('div');
-                a.className = 'dropdown-item';
-                div.className = 'form-check form-switch';
-                const label = document.createElement('label');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.role = "switch"
-                checkbox.className = 'columnSelector form-check-input';
-                checkbox.dataset.column = index;
-                const savedSelection = localStorage.getItem('selectedColumns#Program');
-                checkbox.checked = !!!savedSelection; // Sélectionner par défaut
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-                    saveSelection();
-                });
+            // ==========================================
+            // GESTION DE LA SUPPRESSION DE PROGRAMME (AJAX)
+            // ==========================================
+            let programIdToDelete = null;
+            const confirmModalEl = document.getElementById('confirmModal');
+            const confirmModal = confirmModalEl ? new bootstrap.Modal(confirmModalEl) : null;
+            const confirmDeleteBtn = document.querySelector('.confirmDeleteAction');
 
-                label.appendChild(document.createTextNode(header.textContent));
-                div.appendChild(label)
-                div.appendChild(checkbox)
-                a.appendChild(div);
-                li.appendChild(a);
-                columnSelector.appendChild(li);
+            // Clic sur le bouton de suppression
+            document.querySelectorAll('.deleteBtn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
 
-                header.addEventListener('click', function() {
-                    sortTable(index);
-                });
+                    programIdToDelete = this.getAttribute('data-id');
+                    const programName = this.getAttribute('data-name') || '';
 
-                if (savedSelection) {
-                    const selectedColumns = JSON.parse(savedSelection);
-                    toggleColumn(parseInt(index), selectedColumns.includes(index));
-                }
-            });
+                    const modalBody = confirmModalEl.querySelector('.modal-body');
+                    if (modalBody) {
+                        modalBody.innerHTML = `Êtes-vous sûr de vouloir supprimer le programme <strong>${programName}</strong> ? Cette action est irréversible.`;
+                    }
 
-
-            const checkboxes = document.querySelectorAll('.columnSelector');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-
-                    // Sauvegarde la sélection dans le localStorage
-                    saveSelection();
+                    if (confirmModal) {
+                        confirmModal.show();
+                    }
                 });
             });
 
-            // Chargement des valeurs sauvegardées dans le localStorage
-            loadSavedSelection();
-        });
+            // Confirmation dans la Modal
+            if (confirmDeleteBtn) {
+                confirmDeleteBtn.addEventListener('click', async function() {
+                    if (!programIdToDelete) return;
 
-        function toggleColumn(columnIndex, show) {
-            const dataTable = document.getElementById('Program');
-            const cells = dataTable.querySelectorAll(
-                `tr td:nth-child(${columnIndex + 1}), th:nth-child(${columnIndex + 1})`);
+                    // Vérification du token CSRF
+                    const csrfMeta = document.head.querySelector('meta[name="csrf-token"]');
+                    if (!csrfMeta) {
+                        alert("Erreur : Le token CSRF est introuvable dans le header <head> de votre layout.");
+                        return;
+                    }
 
-            cells.forEach(function(cell) {
-                if (show) {
-                    cell.style.display = ''; // Affiche la colonne
-                } else {
-                    cell.style.display = 'none'; // Masque la colonne
-                }
-            });
-        }
+                    try {
+                        // Requête vers la route de suppression des programmes
+                        const response = await fetch('/programs/delete/' + programIdToDelete, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfMeta.content,
+                                'Accept': 'application/json'
+                            }
+                        });
 
-        function saveSelection() {
-            const selectedColumns = Array.from(document.querySelectorAll('.columnSelector'))
-                .filter(c => c.checked)
-                .map(c => c.dataset.column);
-            localStorage.setItem('selectedColumns#Program', JSON.stringify(selectedColumns));
-        }
+                        const result = await response.json();
 
-        function loadSavedSelection() {
-            const savedSelection = localStorage.getItem('selectedColumns#Program');
-            if (savedSelection) {
-                const selectedColumns = JSON.parse(savedSelection);
-                selectedColumns.forEach(function(columnIndex) {
-                    const checkbox = document.querySelector(`.columnSelector[data-column="${columnIndex}"]`);
-                    if (checkbox) {
-                        checkbox.checked = true;
-                        toggleColumn(parseInt(columnIndex), true);
+                        if (response.ok && (result.isSuccess || result.success)) {
+                            // Redirection vers l'index car la page actuelle de détail n'existera plus
+                            window.location.href = "{{ route('indexProgram') }}";
+                        } else {
+                            alert(result.message || "Impossible de supprimer ce programme.");
+                        }
+                    } catch (error) {
+                        console.error("Erreur de suppression :", error);
+                        alert("Une erreur réseau est survenue lors de la suppression.");
+                    } finally {
+                        if (confirmModal) confirmModal.hide();
                     }
                 });
             }
-        }
-
-        function sortTable(columnIndex) {
-            const table = document.getElementById('Program');
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-            console.log({
-                rows
-            });
-
-            rows.sort((a, b) => {
-                const cellA = a.querySelectorAll('td')[columnIndex].textContent;
-                const cellB = b.querySelectorAll('td')[columnIndex].textContent;
-
-                return cellA.localeCompare(cellB, undefined, {
-                    numeric: true,
-                    sensitivity: 'base'
-                });
-            });
-
-            table.querySelector('tbody').innerHTML = '';
-            rows.forEach(row => table.querySelector('tbody').appendChild(row));
-        }
+        });
     </script>
 @endsection

@@ -220,10 +220,10 @@
                 class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-slate-100">
                 <div class="flex items-center gap-2">
                     <span class="text-xl">🧩</span>
-                    @if($activity->children->count() > 0)
-                    <h2 class="text-lg font-bold text-slate-900">Sous-activités rattachées</h2>
+                    @if ($activity->children->count() > 0)
+                        <h2 class="text-lg font-bold text-slate-900">Sous-activités rattachées</h2>
                     @else
-                    <h2 class="text-lg font-bold text-slate-900">Activité Parente</h2>
+                        <h2 class="text-lg font-bold text-slate-900">Activité Parente</h2>
                     @endif
                 </div>
 
@@ -241,7 +241,8 @@
                         </ul>
                     </div>
 
-                    <a href="{{ route('createActivity') }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="créer une nouvelle activité"
+                    <a href="{{ route('createActivity') }}" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="créer une nouvelle activité"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors">
                         <i class="fa-solid fa-plus"></i>
                         <span>Ajouter une sous-activité</span>
@@ -282,9 +283,11 @@
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="flex items-center gap-2">
                                             <div class="w-24 bg-slate-100 rounded-full h-2">
-                                                <div class="bg-indigo-600 h-full rounded-full" style="width: {{ $child->completion_rate }}%"></div>
+                                                <div class="bg-indigo-600 h-full rounded-full"
+                                                    style="width: {{ $child->completion_rate }}%"></div>
                                             </div>
-                                            <span class="text-xs font-bold text-slate-600">{{ $child->completion_rate }}%</span>
+                                            <span
+                                                class="text-xs font-bold text-slate-600">{{ $child->completion_rate }}%</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">
@@ -292,11 +295,11 @@
                                             class="px-2 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-full">{{ $child->status }}</span>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-xs">
-                                        <a href="{{route('showActivity',  $child->id ) }}"
+                                        <a href="{{ route('showActivity', $child->id) }}"
                                             class="text-indigo-600 hover:text-indigo-900 font-bold">Ouvrir</a>
                                     </td>
                                 </tr>
-                                @endforeach
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -306,51 +309,54 @@
 
             @if ($activity->parent)
                 <table class="table min-w-full divide-y divide-slate-100" id="Activity">
-                        <thead class="bg-slate-50">
-                            <tr>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
-                                    Intitulé</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
-                                    Progression</th>
-                                <th
-                                    class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
-                                    Statut</th>
-                                <th
-                                    class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
-                                    Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-slate-100">
-                                <!-- Exemple de ligne 1 -->
-                                <tr class="hover:bg-slate-50/50 transition-colors">
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-3">
-                                            <input type="checkbox" name="collect_data" data-id="1"
-                                                class="form-check-input w-4.5 h-4.5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
-                                            <span class="text-sm font-semibold text-slate-800">{{ $activity->parent->name }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center gap-2">
-                                            <div class="w-24 bg-slate-100 rounded-full h-2">
-                                                <div class="bg-indigo-600 h-full rounded-full" style="width: {{ $activity->parent->completion_rate }}%"></div>
-                                            </div>
-                                            <span class="text-xs font-bold text-slate-600">{{ $activity->parent->completion_rate }}%</span>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span
-                                            class="px-2 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-full">{{ $activity->parent->status }}</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-xs">
-                                        <a href="{{route('showActivity',  $activity->parent->id ) }}"
-                                            class="text-indigo-600 hover:text-indigo-900 font-bold">Ouvrir</a>
-                                    </td>
-                                </tr>
-                        </tbody>
-                    </table>
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
+                                Intitulé</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
+                                Progression</th>
+                            <th
+                                class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
+                                Statut</th>
+                            <th
+                                class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider cursor-pointer hover:bg-slate-100">
+                                Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-slate-100">
+                        <!-- Exemple de ligne 1 -->
+                        <tr class="hover:bg-slate-50/50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" name="collect_data" data-id="1"
+                                        class="form-check-input w-4.5 h-4.5 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                    <span
+                                        class="text-sm font-semibold text-slate-800">{{ $activity->parent->name }}</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-24 bg-slate-100 rounded-full h-2">
+                                        <div class="bg-indigo-600 h-full rounded-full"
+                                            style="width: {{ $activity->parent->completion_rate }}%"></div>
+                                    </div>
+                                    <span
+                                        class="text-xs font-bold text-slate-600">{{ $activity->parent->completion_rate }}%</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span
+                                    class="px-2 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-full">{{ $activity->parent->status }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-xs">
+                                <a href="{{ route('showActivity', $activity->parent->id) }}"
+                                    class="text-indigo-600 hover:text-indigo-900 font-bold">Ouvrir</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             @endif
             {{-- @if (is_null($activity->parent_activity_id))
                 <div class="table-responsive overflow-x-auto rounded-xl border border-slate-100">
@@ -490,7 +496,8 @@
                         </ul>
                     </div>
 
-                    <a href="{{ route('assignedIndicator', $activity->id) }}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Lier l'activité à un indicateur"
+                    <a href="{{ route('assignedIndicator', $activity->id) }}" data-bs-toggle="tooltip"
+                        data-bs-placement="bottom" title="Lier l'activité à un indicateur"
                         class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 text-white text-xs font-bold rounded-lg hover:bg-indigo-700 transition-colors">
                         <i class="fa-solid fa-plus"></i>
                         <span>Lier l'activité à un indicateur</span>
@@ -498,345 +505,199 @@
                 </div>
             </div>
 
-        <!-- TRIPTYQUE DES INDICATEURS DE PERFORMANCE -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <!-- Carte Outputs -->
-            <div
-                class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl">📊</span>
-                        <span
-                            class="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-lg">Produit</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Outputs</h3>
-                    <div class="text-2xl font-black text-slate-900 mb-2">{{ $outputIndicator }} Indicateur(s)</div>
-                </div>
-                <a href="#"
-                    class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
-                    Visualiser
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
-            <!-- Carte Outcomes -->
-            <div
-                class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl">📈</span>
-                        <span
-                            class="text-xs font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded-lg">Effets</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Outcomes</h3>
-                    <div class="text-2xl font-black text-slate-900 mb-2">{{ $outcomeIndicator }} Indicateurs</div>
-                </div>
-                <a href="#"
-                    class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
-                    Visualiser
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-
-            <!-- Carte Impacts -->
-            <div
-                class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="text-2xl">🌍</span>
-                        <span
-                            class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded-lg">Impacts</span>
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Impacts</h3>
-                    <div class="text-2xl font-black text-slate-900 mb-2">{{ $impactIndicator }} Indicateurs</div>
-                </div>
-                <a href="#"
-                    class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
-                    Visualiser
-                    <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                </a>
-            </div>
-        </div>
-
-        <!-- SECTION TIMELINE -->
-        <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
-            <div class="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
-                <span class="text-xl">📜</span>
-                <h2 class="text-lg font-bold text-slate-900">Activité Timeline (Version 2)</h2>
-            </div>
-
-            <div class="relative pl-6 border-l-2 border-indigo-100 ml-4 space-y-8">
-                <!-- Étape 1 -->
-                <div class="relative">
-                    <span
-                        class="absolute -left-[31px] top-1.5 bg-indigo-600 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
-                    <div class="flex items-center justify-between gap-4">
-                        <h4 class="text-sm font-bold text-slate-800">Planification validée</h4>
-                        <span class="text-xs text-slate-400">01 Janvier 2026</span>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-1">Structure de l'activité approuvée par la direction du projet.
-                    </p>
-                </div>
-
-                <!-- Étape 2 -->
-                <div class="relative">
-                    <span
-                        class="absolute -left-[31px] top-1.5 bg-indigo-600 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
-                    <div class="flex items-center justify-between gap-4">
-                        <h4 class="text-sm font-bold text-slate-800">Début de l'implémentation</h4>
-                        <span class="text-xs text-slate-400">12 Février 2026</span>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-1">Attribution des ressources humaines et démarrage des ateliers.
-                    </p>
-                </div>
-
-                <!-- Étape 3 -->
-                <div class="relative">
-                    <span
-                        class="absolute -left-[31px] top-1.5 bg-slate-300 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
-                    <div class="flex items-center justify-between gap-4">
-                        <h4 class="text-sm font-bold text-slate-800">Audit de mi-parcours</h4>
-                        <span class="text-xs text-slate-400">En cours</span>
-                    </div>
-                    <p class="text-xs text-slate-500 mt-1">Vérification de l'atteinte des KPI préliminaires.</p>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Modal -->
-    {{-- <div class="modal fade fixed inset-0 z-50 hidden overflow-y-auto" id="confirmModal" tabindex="-1"
-        aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="flex items-center justify-center min-h-screen p-4">
-            <div class="fixed inset-0 bg-slate-900/60 transition-opacity" data-bs-dismiss="modal"></div>
-
-            <div
-                class="relative bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-100 overflow-hidden transform transition-all duration-300">
-                <div class="p-6">
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-10 h-10 rounded-full bg-rose-50 flex items-center justify-center text-rose-600">
-                            <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+            <!-- TRIPTYQUE DES INDICATEURS DE PERFORMANCE -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Carte Outputs -->
+                <div
+                    class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">📊</span>
+                            <span
+                                class="text-xs font-bold text-indigo-600 uppercase tracking-widest bg-indigo-50 px-2.5 py-1 rounded-lg">Produit</span>
                         </div>
-                        <h3 class="text-lg font-bold text-slate-900" id="confirmModalLabel">Confirmer la suppression</h3>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Outputs</h3>
+                        <div class="text-2xl font-black text-slate-900 mb-2">{{ $outputIndicator }} Indicateur(s)</div>
                     </div>
-                    <div class="modal-body text-sm text-slate-500 leading-relaxed mb-6">
-                        Êtes-vous sûr de vouloir supprimer définitivement cette activité ? Cette action est irréversible.
+                    <a href="#"
+                        class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
+                        Visualiser
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Carte Outcomes -->
+                <div
+                    class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">📈</span>
+                            <span
+                                class="text-xs font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded-lg">Effets</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Outcomes</h3>
+                        <div class="text-2xl font-black text-slate-900 mb-2">{{ $outcomeIndicator }} Indicateurs</div>
                     </div>
-                    <div class="flex items-center justify-end gap-3">
-                        <button type="button"
-                            class="px-4 py-2 text-sm font-semibold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition-colors"
+                    <a href="#"
+                        class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
+                        Visualiser
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <!-- Carte Impacts -->
+                <div
+                    class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6 hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-2xl">🌍</span>
+                            <span
+                                class="text-xs font-bold text-blue-600 uppercase tracking-widest bg-blue-50 px-2.5 py-1 rounded-lg">Impacts</span>
+                        </div>
+                        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-1">Impacts</h3>
+                        <div class="text-2xl font-black text-slate-900 mb-2">{{ $impactIndicator }} Indicateurs</div>
+                    </div>
+                    <a href="#"
+                        class="mt-4 inline-flex items-center justify-center gap-1 w-full py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-bold rounded-xl border border-slate-100 hover:border-slate-200 transition-all-200">
+                        Visualiser
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECTION TIMELINE -->
+            <div class="bg-white border border-slate-100 rounded-2xl shadow-sm p-6">
+                <div class="flex items-center gap-2 mb-6 pb-4 border-b border-slate-100">
+                    <span class="text-xl">📜</span>
+                    <h2 class="text-lg font-bold text-slate-900">Activité Timeline (Version 2)</h2>
+                </div>
+
+                <div class="relative pl-6 border-l-2 border-indigo-100 ml-4 space-y-8">
+                    <!-- Étape 1 -->
+                    <div class="relative">
+                        <span
+                            class="absolute -left-[31px] top-1.5 bg-indigo-600 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
+                        <div class="flex items-center justify-between gap-4">
+                            <h4 class="text-sm font-bold text-slate-800">Planification validée</h4>
+                            <span class="text-xs text-slate-400">01 Janvier 2026</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Structure de l'activité approuvée par la direction du
+                            projet.
+                        </p>
+                    </div>
+
+                    <!-- Étape 2 -->
+                    <div class="relative">
+                        <span
+                            class="absolute -left-[31px] top-1.5 bg-indigo-600 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
+                        <div class="flex items-center justify-between gap-4">
+                            <h4 class="text-sm font-bold text-slate-800">Début de l'implémentation</h4>
+                            <span class="text-xs text-slate-400">12 Février 2026</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Attribution des ressources humaines et démarrage des
+                            ateliers.
+                        </p>
+                    </div>
+
+                    <!-- Étape 3 -->
+                    <div class="relative">
+                        <span
+                            class="absolute -left-[31px] top-1.5 bg-slate-300 w-4 h-4 rounded-full border-4 border-white shadow-sm"></span>
+                        <div class="flex items-center justify-between gap-4">
+                            <h4 class="text-sm font-bold text-slate-800">Audit de mi-parcours</h4>
+                            <span class="text-xs text-slate-400">En cours</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Vérification de l'atteinte des KPI préliminaires.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MODAL DE CONFIRMATION DE SUPPRESSION -->
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-light">
+                        <h5 class="modal-title fs-5 fw-bold text-dark" id="confirmModalLabel">
+                            <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Confirmation de suppression
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        ...
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary rounded-pill px-3"
                             data-bs-dismiss="modal">Annuler</button>
                         <button type="button"
-                            class="confirmDeleteAction px-4 py-2 text-sm font-semibold text-white bg-rose-600 rounded-xl hover:bg-rose-700 shadow-sm shadow-rose-200 transition-colors">Supprimer
-                            l'activité</button>
+                            class="btn btn-danger rounded-pill px-3 confirmDeleteAction">Supprimer</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div> --}}
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title fs-5" id="confirmModalLabel">Delete confirm</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary confirmDeleteAction">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        // Logique Ajax inchangée pour le traitement des inputs en base de données
-        const checkboxs = document.querySelectorAll('input[type="checkbox"]')
+        <!-- SCRIPT AJAX SUPPRESSION -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
 
-        checkboxs.forEach((checkbox) => {
-            checkbox.onchange = async (event) => {
-                const {
-                    checked,
-                    name,
-                    dataset
-                } = event.target;
-                const {
-                    id
-                } = dataset;
-                console.log({
-                    checked,
-                    name,
-                    id
-                });
-                const data = {
-                    [name]: checked.toString()
-                };
-                const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-                const response = await fetch('/activities/speed/' + id, {
-                    method: 'PUT',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-            };
-        })
+                const deleteButtons = document.querySelectorAll('.deleteBtn');
 
-        // Logique d'affichage et suppression via Modal
-        const deleteButtons = document.querySelectorAll('.deleteBtn')
-        deleteButtons.forEach(deleteButton => {
-            deleteButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                const {
-                    id,
-                    title
-                } = deleteButton.dataset
-                const modalBody = document.querySelector('.modal-body')
-                modalBody.innerHTML =
-                    `Voulez-vous vraiment supprimer cette activité ? Cette action est irréversible.<strong>`
-                console.log({
-                    id,
-                    title
-                });
-                const modal = new bootstrap.Modal(document.querySelector('#confirmModal'))
-                modal.show()
-                const confirmDeleteBtn = document.querySelector('.confirmDeleteAction')
+                deleteButtons.forEach(deleteButton => {
+                    deleteButton.addEventListener('click', (event) => {
+                        event.preventDefault();
 
-                confirmDeleteBtn.addEventListener('click', async () => {
-                    const csrfToken = document.head.querySelector('meta[name="csrf-token"]')
-                        .content;
-                    const response = await fetch('/activities/delete/' + id, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    })
+                        const id = deleteButton.dataset.id;
+                        const title = deleteButton.dataset.title || '';
 
-                    const result = await response.json()
+                        const modalBody = document.querySelector('#confirmModal .modal-body');
+                        modalBody.innerHTML =
+                            `Êtes-vous sûr de vouloir supprimer l'activité <strong>${title}</strong> ? Cette action est irréversible.`;
 
-                    if (result && result.isSuccess) {
-                        window.location.href = window.location.href;
-                    }
+                        const modalEl = document.querySelector('#confirmModal');
+                        const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                        modal.show();
 
-                    modal.hide()
-                })
-            })
-        });
+                        const confirmDeleteBtn = document.querySelector('.confirmDeleteAction');
 
-        // Génération et gestion dynamique des colonnes de la table
-        document.addEventListener('DOMContentLoaded', function() {
-            const tableHeaders = document.querySelectorAll('#Activity th');
-            const columnSelector = document.getElementById('columnSelector');
+                        confirmDeleteBtn.onclick = async () => {
+                            const csrfMeta = document.head.querySelector(
+                                'meta[name="csrf-token"]');
+                            if (!csrfMeta) {
+                                alert("Erreur : Le token CSRF est introuvable.");
+                                return;
+                            }
 
-            tableHeaders.forEach(function(header, index) {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                const div = document.createElement('div');
-                a.className = 'dropdown-item p-2 block hover:bg-slate-50 cursor-pointer';
-                div.className = 'form-check form-switch flex items-center justify-between gap-2';
-                const label = document.createElement('label');
-                label.className = 'cursor-pointer font-medium text-slate-700';
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.role = "switch"
-                checkbox.className =
-                    'columnSelector form-check-input w-4.5 h-4.5 rounded text-indigo-600 border-slate-300 focus:ring-indigo-500';
-                checkbox.dataset.column = index;
-                const savedSelection = localStorage.getItem('selectedColumns#Activity');
-                checkbox.checked = !!!savedSelection; // Sélectionner par défaut
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-                    saveSelection();
+                            try {
+                                const response = await fetch('/activities/delete/' + id, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': csrfMeta.content,
+                                        'Accept': 'application/json'
+                                    }
+                                });
+
+                                const result = await response.json();
+
+                                if (response.ok && (result.isSuccess || result.success)) {
+                                    // Redirection vers la liste des activités
+                                    window.location.href = "{{ route('indexActivity') }}";
+                                } else {
+                                    alert(result.message ||
+                                        "Impossible de supprimer cette activité.");
+                                }
+                            } catch (error) {
+                                console.error('Erreur:', error);
+                                alert("Une erreur réseau est survenue lors de la suppression.");
+                            } finally {
+                                modal.hide();
+                            }
+                        };
+                    });
                 });
 
-                label.appendChild(document.createTextNode(header.textContent));
-                div.appendChild(label)
-                div.appendChild(checkbox)
-                a.appendChild(div);
-                li.appendChild(a);
-                columnSelector.appendChild(li);
-
-                header.addEventListener('click', function() {
-                    sortTable(index);
-                });
-
-                if (savedSelection) {
-                    const selectedColumns = JSON.parse(savedSelection);
-                    toggleColumn(parseInt(index), selectedColumns.includes(index));
-                }
             });
-
-            const checkboxes = document.querySelectorAll('.columnSelector');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-                    saveSelection();
-                });
-            });
-
-            loadSavedSelection();
-        });
-
-        function toggleColumn(columnIndex, show) {
-            const dataTable = document.getElementById('Activity');
-            const cells = dataTable.querySelectorAll(
-                `tr td:nth-child(${columnIndex + 1}), th:nth-child(${columnIndex + 1})`);
-
-            cells.forEach(function(cell) {
-                if (show) {
-                    cell.style.display = ''; // Affiche la colonne
-                } else {
-                    cell.style.display = 'none'; // Masque la colonne
-                }
-            });
-        }
-
-        function saveSelection() {
-            const selectedColumns = Array.from(document.querySelectorAll('.columnSelector'))
-                .filter(c => c.checked)
-                .map(c => c.dataset.column);
-            localStorage.setItem('selectedColumns#Activity', JSON.stringify(selectedColumns));
-        }
-
-        function loadSavedSelection() {
-            const savedSelection = localStorage.getItem('selectedColumns#Activity');
-            if (savedSelection) {
-                const selectedColumns = JSON.parse(savedSelection);
-                selectedColumns.forEach(function(columnIndex) {
-                    const checkbox = document.querySelector(`.columnSelector[data-column="${columnIndex}"]`);
-                    if (checkbox) {
-                        checkbox.checked = true;
-                        toggleColumn(parseInt(columnIndex), true);
-                    }
-                });
-            }
-        }
-
-        function sortTable(columnIndex) {
-            const table = document.getElementById('Activity');
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-            rows.sort((a, b) => {
-                const cellA = a.querySelectorAll('td')[columnIndex].textContent;
-                const cellB = b.querySelectorAll('td')[columnIndex].textContent;
-
-                return cellA.localeCompare(cellB, undefined, {
-                    numeric: true,
-                    sensitivity: 'base'
-                });
-            });
-
-            table.querySelector('tbody').innerHTML = '';
-            rows.forEach(row => table.querySelector('tbody').appendChild(row));
-        }
-    </script>
-@endsection
+        </script>
+    @endsection

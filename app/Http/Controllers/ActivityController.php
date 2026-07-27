@@ -7,10 +7,13 @@ use App\Models\Activity;
 use App\Models\Indicator;
 use App\Models\Project;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Throwable;
 
 class ActivityController extends Controller
 {
@@ -199,4 +202,34 @@ class ActivityController extends Controller
             ->route('showActivity', $activity)
             ->with('success', 'Indicateur associé avec succès !');
     }
+
+
+    /**
+     * Supprime une activité spécifique.
+     *
+     * @param Activity $activity
+     * @return JsonResponse
+     */
+    public function deleteActivity(Activity $activity): JsonResponse
+    {
+        try {
+            // Suppression de l'activité
+            $activity->delete();
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'L\'activité a été supprimée avec succès.'
+            ], 200);
+
+        } catch (Throwable $e) {
+            // Journalisation de l'erreur dans storage/logs/laravel.log
+            Log::error('Erreur suppression activité #' . $activity->id . ': ' . $e->getMessage());
+
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => 'Impossible de supprimer cette activité car elle est liée à d\'autres enregistrements.'
+            ], 400);
+        }
+    }
+
 }

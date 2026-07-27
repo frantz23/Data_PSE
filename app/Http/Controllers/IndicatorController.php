@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Indicator;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\IndicatorFormRequest;
+use App\Models\Indicator;
 use App\Models\IndicatorValue;
 use App\Models\Project;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
+use Throwable;
 
 class IndicatorController extends Controller
 {
@@ -134,6 +137,26 @@ class IndicatorController extends Controller
         $indicator->update($data);
 
         return redirect()->route('showIndicator', ['id' => $indicator->id]);
+    }
+
+    public function deleteIndicator(Indicator $indicator): JsonResponse
+    {
+        try {
+            $indicator->delete();
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'L\'indicateur a été supprimé avec succès.'
+            ], 200);
+
+        } catch (Throwable $e) {
+            Log::error('Erreur suppression indicateur #' . $indicator->id . ': ' . $e->getMessage());
+
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => 'Impossible de supprimer cet indicateur (données liées).'
+            ], 400);
+        }
     }
 
 }

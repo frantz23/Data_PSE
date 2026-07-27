@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Program;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\ProgramFormRequest;
+use App\Models\Program;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
+use Throwable;
 
 class ProgramController extends Controller
 {
@@ -119,5 +123,28 @@ class ProgramController extends Controller
         $program->update($data);
 
         return redirect()->route('showProgram', ['id' => $program->id]);
+    }
+
+
+
+    public function deleteProgram(Program $program): JsonResponse
+    {
+        try {
+            // Suppression du programme
+            $program->delete();
+
+            return response()->json([
+                'isSuccess' => true,
+                'message'   => 'Le programme a été supprimé avec succès.'
+            ], 200);
+        } catch (Throwable $e) {
+            // Journalisation de l'erreur pour le débogage (ex: contrainte de clé étrangère SQL)
+            Log::error('Erreur lors de la suppression du programme #' . $program->id . ': ' . $e->getMessage());
+
+            return response()->json([
+                'isSuccess' => false,
+                'message'   => 'Impossible de supprimer ce programme car il est lié à d\'autres données.'
+            ], 400);
+        }
     }
 }

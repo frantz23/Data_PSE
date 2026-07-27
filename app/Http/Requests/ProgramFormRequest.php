@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ProgramFormRequest extends FormRequest
 {
@@ -22,9 +23,16 @@ class ProgramFormRequest extends FormRequest
     public function rules(): array
     {
         $isRequired = request()->isMethod("POST") ?"required|": "";
+        $programId = $this->route('program')?->id ?? $this->route('program');
+
         return [
             //
-            'name' => $isRequired.'string|unique',
+            // 'name' => $isRequired.'string|unique:programs,name',
+            'name' => [
+                'required',
+                'string',
+                Rule::unique('projects', 'name')->ignore($programId),
+            ],
 			// 'code' => $isRequired.'string',
 			'description' => 'nullable|string',
 			'budget' => $isRequired.'numeric',

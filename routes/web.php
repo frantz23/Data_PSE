@@ -10,6 +10,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
+use App\Models\Activity;
 use App\Models\IndicatorValue;
 use App\Models\Organization;
 use App\Models\Project;
@@ -69,6 +70,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/programs/edit/{id}', [ProgramController::class, 'editProgram'])->name('editProgram');
     Route::post('/programs/store', [ProgramController::class, 'storeProgram'])->name('storeProgram');
     Route::put('/programs/update/{program}', [ProgramController::class, 'updateProgram'])->name('updateProgram');
+    Route::delete('/programs/delete/{program}', [ProgramController::class, 'deleteProgram'])->name('deleteProgram');
 
     //Projects
     Route::get('/projects', [ProjectController::class, 'indexProject'])->name('indexProject');
@@ -78,6 +80,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/projects/edit/{id}', [ProjectController::class, 'editProject'])->name('editProject');
     Route::post('/projects/store', [ProjectController::class, 'storeProject'])->name('storeProject');
     Route::put('/projects/update/{project}', [ProjectController::class, 'updateProject'])->name('updateProject');
+    Route::delete('/projects/delete/{project}', [ProjectController::class, 'deleteProject'])->name('deleteProject');
 
     //Activities
     Route::get('/activities', [ActivityController::class, 'indexActivity'])->name('indexActivity');
@@ -89,6 +92,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/activities/{activity}/indicators/create', [ActivityController::class, 'assignedIndicator'])->name('assignedIndicator');
     Route::post('/activities/{activity}/indicators/attach', [ActivityController::class, 'attachIndicator'])
     ->name('attachIndicator');
+    Route::delete('/activities/delete/{activity}', [ActivityController::class, 'deleteActivity'])->name('deleteActivity');
 
     //Indicator
     Route::get('/indicators', [IndicatorController::class, 'indexIndicator'])->name('indexIndicator');
@@ -97,6 +101,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/indicators/edit/{id}', [IndicatorController::class, 'editIndicator'])->name('editIndicator');
     Route::post('/indicators/store', [IndicatorController::class, 'storeIndicator'])->name('storeIndicator');
     Route::put('/indicators/update/{indicator}', [IndicatorController::class, 'updateIndicator'])->name('updateIndicator');
+    Route::delete('/indicators/delete/{indicator}', [IndicatorController::class, 'deleteIndicator'])->name('deleteIndicator');
 
     //IndicatorValue
     Route::get('/indicatorvalues/create/{id}', [IndicatorvalueController::class, 'createIndicatorValue'])->name('createIndicatorValue');
