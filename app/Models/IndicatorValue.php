@@ -32,7 +32,7 @@ class IndicatorValue extends Model
 	}
 
 
-	protected $fillable = ['value_numeric', 'value_text', 'reporting_date', 'comment', 'indicator_id', 'organization_id', 'user_id'];
+	protected $fillable = ['value_numeric', 'value_text', 'reporting_date', 'comment', 'indicator_id', 'organization_id', 'user_id', 'validated'];
 
 	public function indicatorvaluefiles()
 	{

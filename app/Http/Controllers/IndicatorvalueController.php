@@ -130,4 +130,18 @@ class IndicatorvalueController extends Controller
 
         return redirect()->route('showIndicatorValue', ['id' => $indicatorvalue->id]);
     }
+
+    public function validateValue($id)
+    {
+        $indicatorValue = IndicatorValue::findOrFail($id);
+
+        // Marquer comme validé
+        $indicatorValue->update([
+            'validated' => true,
+            // Optionnel : 'validated_by' => auth()->id(),
+            // Optionnel : 'validated_at' => now(),
+        ]);
+
+        return back()->with('success', 'La collecte d\'information a été validée avec succès.');
+    }
 }

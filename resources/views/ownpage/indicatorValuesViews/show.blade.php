@@ -26,6 +26,23 @@
                 <a href="#" data-id="{{ $indicatorValue->id }}" class="btn btn-danger deleteBtn">
                     <i class="bi-solid bi-trash"></i> Supprimer
                 </a>
+                @if (Auth::user()->hasRole('adminONG'))
+                    @if (!$indicatorValue->validated)
+                        <form action="{{ route('validateIndicatorValue', $indicatorValue->id) }}" method="POST"
+                            class="d-inline">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="btn btn-success"
+                                onclick="return confirm('Voulez-vous vraiment valider cette collecte ?')">
+                                <i class="bi bi-check-circle me-1"></i> Valider
+                            </button>
+                        </form>
+                    @else
+                        <button class="btn btn-outline-success" disabled>
+                            <i class="bi bi-check-circle-fill me-1"></i> Déjà validé
+                        </button>
+                    @endif
+                @endif
             </div>
         </div>
 

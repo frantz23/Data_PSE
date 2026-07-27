@@ -91,7 +91,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::put('/activities/update/{activity}', [ActivityController::class, 'updateActivity'])->name('updateActivity');
     Route::get('/activities/{activity}/indicators/create', [ActivityController::class, 'assignedIndicator'])->name('assignedIndicator');
     Route::post('/activities/{activity}/indicators/attach', [ActivityController::class, 'attachIndicator'])
-    ->name('attachIndicator');
+        ->name('attachIndicator');
     Route::delete('/activities/delete/{activity}', [ActivityController::class, 'deleteActivity'])->name('deleteActivity');
 
     //Indicator
@@ -109,7 +109,8 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::get('/indicatorvalues/edit/{id}', [IndicatorvalueController::class, 'editIndicatorValue'])->name('editIndicatorValue');
     Route::post('/indicatorvalues/store', [IndicatorvalueController::class, 'storeIndicatorValue'])->name('storeIndicatorValue');
     Route::put('/indicatorvalues/update/{indicatorvalue}', [IndicatorvalueController::class, 'updateIndicatorValue'])->name('updateIndicatorValue');
-
+    Route::patch('/indicatorvalues/{id}/validate', [IndicatorvalueController::class, 'validateValue'])
+        ->name('validateIndicatorValue');
     //IVF
     Route::get('/indicatorvaluefiles/{indicatorValue}/create/file', [IndicatorvaluefileController::class, 'createIVFile'])->name('createIVFile');
     Route::post('/indicatorvaluefiles/store', [IndicatorvaluefileController::class, 'storeIVFile'])->name('storeIVFile');
@@ -126,8 +127,6 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::post('/adminONG/users/store', [UserController::class, 'storeUserOrg'])->name('storeUserOrg');
     Route::put('/adminONG/users/update/{user}', [UserController::class, 'updateUserOrg'])->name('updateUserOrg');
     Route::delete('/adminONG/users/delete/{user}', [UserController::class, 'deleteUserOrg'])->name('deleteUserOrg');
-
-
 });
 
 require __DIR__ . '/auth.php';
@@ -265,7 +264,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/activities/delete/{activity}', 'App\Http\Controllers\ActivityController@delete')->name('activity.delete');
 });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->group(function () {
 
     //Get Indicators datas
     Route::get('/indicators', 'App\Http\Controllers\IndicatorController@index')->name('indicator.index');
@@ -290,10 +289,9 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
     //Delete Indicator
     Route::delete('/indicators/delete/{indicator}', 'App\Http\Controllers\IndicatorController@delete')->name('indicator.delete');
-
 });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->group(function () {
 
     //Get Indicatorvalues datas
     Route::get('/indicatorvalues', 'App\Http\Controllers\IndicatorvalueController@index')->name('indicatorvalue.index');
@@ -318,10 +316,9 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
     //Delete Indicatorvalue
     Route::delete('/indicatorvalues/delete/{indicatorvalue}', 'App\Http\Controllers\IndicatorvalueController@delete')->name('indicatorvalue.delete');
-
 });
 
-Route::prefix('admin')->name('admin.')->group(function(){
+Route::prefix('admin')->name('admin.')->group(function () {
 
     //Get Indicatorvaluefiles datas
     Route::get('/indicatorvaluefiles', 'App\Http\Controllers\IndicatorvaluefileController@index')->name('indicatorvaluefile.index');
@@ -346,5 +343,4 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
     //Delete Indicatorvaluefile
     Route::delete('/indicatorvaluefiles/delete/{indicatorvaluefile}', 'App\Http\Controllers\IndicatorvaluefileController@delete')->name('indicatorvaluefile.delete');
-
 });
