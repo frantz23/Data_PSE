@@ -100,4 +100,12 @@ class User extends Authenticatable
 	
 	}
 
+
+	public function indicatorvaluecomments()
+	{
+		
+		return $this->hasMany(\App\Models\IndicatorValueComment::class);
+	
+	}
+
 }

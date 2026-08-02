@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashController;
 use App\Http\Controllers\IndicatorController;
+use App\Http\Controllers\IndicatorValueCommentController;
 use App\Http\Controllers\IndicatorvalueController;
 use App\Http\Controllers\IndicatorvaluefileController;
 use App\Http\Controllers\OrganizationController;
@@ -21,7 +22,6 @@ Route::get('/', function () {
     $projects = Project::count();
     return view('home', ['organizations'  => $organizations, 'projects' => $projects]);
 });
-
 
 
 Route::get('/dashboard', function () {
@@ -118,6 +118,7 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     //Project resume (dashboard)
     Route::get('/dash', [DashController::class, 'indexDash'])->name('indexDash');
     Route::get('/dashProject/{id}', [DashController::class, 'dashProject'])->name('dashProject');
+    Route::get('/project_dashboard/{id}', [DashController::class, 'dashboard'])->name('project_dashboard');
 
     //User organization
     Route::get('/adminONG/users', [UserController::class, 'indexUserOrg'])->name('indexUserOrg');
@@ -127,6 +128,14 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::post('/adminONG/users/store', [UserController::class, 'storeUserOrg'])->name('storeUserOrg');
     Route::put('/adminONG/users/update/{user}', [UserController::class, 'updateUserOrg'])->name('updateUserOrg');
     Route::delete('/adminONG/users/delete/{user}', [UserController::class, 'deleteUserOrg'])->name('deleteUserOrg');
+
+    // Route pour ajouter un commentaire sur une collecte
+    Route::post('/indicator-values/{id}/comments', [IndicatorValueCommentController::class, 'store'])
+        ->name('storeIndicatorValueComment');
+
+    // Route pour marquer une notification comme lue via la cloche
+    Route::get('/notifications/{id}/read', [IndicatorValueCommentController::class, 'markAsRead'])
+        ->name('markNotificationAsRead');
 });
 
 require __DIR__ . '/auth.php';

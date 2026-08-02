@@ -201,6 +201,73 @@
         </div>
     </div>
 
+    <div class="card border-0 shadow-sm mt-4">
+    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-chat-left-text me-2 text-primary"></i>Notes & Fil d'échanges
+        </h5>
+        <span class="badge bg-light text-dark border">
+            {{ $indicatorValue->comments->count() }} note(s)
+        </span>
+    </div>
+
+    <div class="card-body p-4">
+        {{-- Formulaire d'ajout de note --}}
+        <form action="{{ route('storeIndicatorValueComment', $indicatorValue->id) }}" method="POST" class="mb-4">
+            @csrf
+            <div class="mb-2">
+                <textarea name="content" class="form-control" rows="3" placeholder="Rédigez une note ou posez une question sur cette donnée..." required></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-sm px-4 rounded-pill">
+                    <i class="bi bi-send me-1"></i> Envoyer la note
+                </button>
+            </div>
+        </form>
+
+        <hr class="my-4">
+
+        {{-- Liste des messages --}}
+        <div class="d-flex flex-column gap-3">
+            @forelse($indicatorValue->comments as $comment)
+                <div class="p-3 bg-light rounded border">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px;">
+                                {{ strtoupper(substr($comment->user->name ?? 'U', 0, 1)) }}
+                            </div>
+                            <span class="fw-bold text-dark">{{ $comment->user->name ?? 'Utilisateur' }}</span>
+                        </div>
+                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                    </div>
+
+                    <p class="mb-1 text-secondary ms-4 ps-2" style="white-space: pre-line;">{{ $comment->content }}</p>
+
+                    {{-- Réponses éventuelles --}}
+                    @if($comment->replies && $comment->replies->count() > 0)
+                        <div class="ms-4 mt-3 pt-2 border-top">
+                            @foreach($comment->replies as $reply)
+                                <div class="bg-white p-2 rounded mb-2 border">
+                                    <div class="d-flex justify-content-between small">
+                                        <strong class="text-dark">{{ $reply->user->name ?? 'Utilisateur' }}</strong>
+                                        <span class="text-muted">{{ $reply->created_at->diffForHumans() }}</span>
+                                    </div>
+                                    <p class="small text-secondary mb-0 mt-1">{{ $reply->content }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            @empty
+                <div class="text-center text-muted py-3">
+                    <i class="bi bi-chat-square-dots d-block fs-3 mb-2 opacity-50"></i>
+                    <p class="mb-0">Aucun commentaire ni remarque sur cette collecte pour le moment.</p>
+                </div>
+            @endforelse
+        </div>
+    </div>
+</div>
+
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

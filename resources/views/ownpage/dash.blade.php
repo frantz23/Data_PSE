@@ -186,7 +186,7 @@ Project Resume
 
                             <!-- Bouton d'accès direct au Dashboard -->
                             <div class="mt-4">
-                                <a href="{{ route('dashProject', $project->id) }}" class="btn btn-outline-primary w-100 rounded-pill fw-semibold">
+                                <a href="{{ route('project_dashboard', $project->id) }}" class="btn btn-outline-primary w-100 rounded-pill fw-semibold">
                                     Voir le Dashboard <i class="bi bi-arrow-right ms-1"></i>
                                 </a>
                             </div>

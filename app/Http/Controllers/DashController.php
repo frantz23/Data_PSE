@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Activity;
+use App\Models\IndicatorValue;
+use App\Models\IndicatorValueFile;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -51,7 +53,6 @@ class DashController extends Controller
             $globalPerformanceRate = $projectsPerformance->count() > 0
                 ? round($projectsPerformance->avg(), 1)
                 : 0;
-
         } else {
             $completedProjects = 0;
             $completionRate = 0;
@@ -91,6 +92,66 @@ class DashController extends Controller
             'indicators',
             'totalIndicators',
             'performanceRate',
+            'chartLabels',
+            'chartCurrent',
+            'chartTargets'
+        ));
+    }
+
+    public function dashboard($id)
+    {
+        // 1. Récupérer le projet avec son ID
+        $project = Project::findOrFail($id);
+
+        // Charger les relations de base en une seule requête
+        $project->load([
+            'program',
+            'activities',
+            'indicators',
+        ]);
+
+        // 1. Métriques Activités
+        $totalActivities = $project->activities->count();
+        $completedActivities = $project->activities->where('status', 'completed')->count(); // Ajustez selon vos dev 'terminé' / 'completed'
+
+        // 2. Métriques Indicateurs (Gestion Axée sur les Résultats)
+        $outputIndicatorsCount = $project->indicators->where('result_level', 'output')->count();
+        $globalProgress = round($project->indicators->avg('progress') ?? 0, 1);
+
+        // 3. Identifiants des indicateurs du projet (pour requêtes cibleries)
+        $indicatorIds = $project->indicators->pluck('id');
+
+        // 4. Dernières collectes réalisées (Top 5)
+        $latestValues = IndicatorValue::whereIn('indicator_id', $indicatorIds)
+            ->with(['indicator', 'user'])
+            ->orderBy('reporting_date', 'desc')
+            ->take(5)
+            ->get();
+
+        // 5. Derniers justificatifs/documents déposés (Top 5)
+        $latestFiles = IndicatorValueFile::whereHas('indicatorValue', function ($q) use ($indicatorIds) {
+            $q->whereIn('indicator_id', $indicatorIds);
+        })
+            ->with(['indicatorvalue.indicator', 'user'])
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $indicators = $project->indicators;
+        // Données pour le graphique résumé (Chart.js)
+        $chartLabels = $indicators->pluck('name')->toArray();
+        $chartCurrent = $indicators->pluck('current_value')->map(fn($v) => $v ?? 0)->toArray();
+        $chartTargets = $indicators->pluck('target')->map(fn($v) => $v ?? 0)->toArray();
+
+
+        return view('ownpage.project_dashboard', compact(
+            'project',
+            'totalActivities',
+            'completedActivities',
+            'outputIndicatorsCount',
+            'globalProgress',
+            'latestValues',
+            'latestFiles',
             'chartLabels',
             'chartCurrent',
             'chartTargets'

@@ -11,7 +11,7 @@ class IndicatorValueFile extends Model
 	public function user()
 	{
 
-		return $this->belongsTo(\App\Models\User::class);
+		return $this->belongsTo(\App\Models\User::class,'user_id');
 
 	}
 
@@ -19,7 +19,7 @@ class IndicatorValueFile extends Model
 	public function indicatorvalue()
 	{
 
-		return $this->belongsTo(\App\Models\IndicatorValue::class);
+		return $this->belongsTo(\App\Models\IndicatorValue::class,'indicator_value_id');
 
 	}
 
