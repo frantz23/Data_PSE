@@ -359,11 +359,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 // Route temporaire pour exécuter les migrations sur AlwaysData
-Route::get('/run-migrations-xyz', function () {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return '<h3>Migrations exécutées avec succès !</h3><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
-    } catch (\Exception $e) {
-        return 'Erreur : ' . $e->getMessage();
-    }
-});
+// Route::get('/run-migrations-xyz', function () {
+//     try {
+//         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+//         return '<h3>Migrations exécutées avec succès !</h3><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+//     } catch (\Exception $e) {
+//         return 'Erreur : ' . $e->getMessage();
+//     }
+// });
