@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserFormRequest;
 use App\Models\Organization;
+use App\Models\Role;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -216,5 +217,37 @@ class UserController extends Controller
                 'message'   => 'Impossible de supprimer cet utilisateur car il est lié à d\'autres données dans le système.'
             ], 400); // 400 Bad Request
         }
+    }
+
+    public function assignView(): View
+    {
+        $organizations = Organization::all();
+        $users = User::all();
+        $roles = Role::all();
+        return view('ownpage.userViews.assignRoleOrg', ['organizations' => $organizations, 'users' => $users, 'roles' => $roles]);
+    }
+
+    public function assign(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'role' => 'required|exists:roles,name',
+        ]);
+
+        $user = User::findOrFail($request->user_id);
+
+        // 1 seul rôle par user
+        $user->syncRoles([$request->role]);
+
+        return back()->with('success', 'Role assigned successfully.');
+    }
+
+    public function getUsers($organizationId)
+    {
+        $users = User::where('organization_id', $organizationId)
+            ->select('id', 'name', 'email')
+            ->get();
+
+        return response()->json($users);
     }
 }

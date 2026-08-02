@@ -2,53 +2,49 @@
 
 namespace App\Notifications;
 
+use App\Models\IndicatorValueComment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class NewCommentNotification extends Notification
 {
     use Queueable;
 
+    public $comment;
+
     /**
-     * Create a new notification instance.
+     * Reçoit le commentaire de l'indicateur
      */
-    public function __construct()
+    public function __construct(IndicatorValueComment $comment)
     {
-        //
+        $this->comment = $comment;
     }
 
     /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
+     * Canal d'envoi : BDD
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database'];
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Données stockées dans la table "notifications"
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toDatabase(object $notifiable): array
     {
-        return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
-    }
+        $authorName = $this->comment->user->name ?? 'Un utilisateur';
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
         return [
-            //
+            'comment_id'         => $this->comment->id,
+            'indicator_value_id' => $this->comment->indicator_value_id,
+            'user_name'          => $authorName,
+            'message'            => "{$authorName} a laissé une note sur une valeur d'indicateur.",
+
+            // ⚠️ Utilisé par votre méthode markAsRead()
+            // (Ajustez 'showIndicator' avec le nom réel de votre route de consultation)
+            'url'                => route('showIndicator', $this->comment->indicator_value_id),
+            'created_at'         => now()->toDateTimeString(),
         ];
     }
 }

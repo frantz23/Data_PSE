@@ -15,6 +15,7 @@ use App\Models\Activity;
 use App\Models\IndicatorValue;
 use App\Models\Organization;
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -128,6 +129,9 @@ Route::middleware(['adminONG', 'auth'])->group(function () {
     Route::post('/adminONG/users/store', [UserController::class, 'storeUserOrg'])->name('storeUserOrg');
     Route::put('/adminONG/users/update/{user}', [UserController::class, 'updateUserOrg'])->name('updateUserOrg');
     Route::delete('/adminONG/users/delete/{user}', [UserController::class, 'deleteUserOrg'])->name('deleteUserOrg');
+    Route::get('/adminONG/assignRole', [UserController::class, 'assignView'])->name('assignViewRole');
+    Route::post('/roles/assign', [UserController::class, 'assign'])->name('assignOrgRole');
+    Route::get('/adminONG/{organization}/users', [UserController::class, 'getUsers'])->name('adminONG.users');
 
     // Route pour ajouter un commentaire sur une collecte
     Route::post('/indicator-values/{id}/comments', [IndicatorValueCommentController::class, 'store'])

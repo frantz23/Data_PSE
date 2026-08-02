@@ -154,34 +154,36 @@ class OrganizationController extends Controller
 }
 
     public function assignView(): View
-    {
-        $organizations = Organization::all();
-        $users = User::all();
-        $roles = Role::all();
-        return view('ownpage.organizationViews.assignRole', ['organizations' => $organizations, 'users' => $users, 'roles' => $roles]);
-    }
+{
+    $organizations = Organization::all();
+    $users = User::all();
+    $roles = Role::all();
 
-    public function assign(Request $request)
-    {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'role' => 'required|exists:roles,name',
-        ]);
+    return view('ownpage.userViews.assignRoleOrg', compact('organizations', 'users', 'roles'));
+}
 
-        $user = User::findOrFail($request->user_id);
+public function assign(Request $request)
+{
+    $request->validate([
+        'organization_id' => 'required|exists:organizations,id',
+        'user_id'         => 'required|exists:users,id',
+        'role'            => 'required|exists:roles,name',
+    ]);
 
-        // 1 seul rôle par user
-        $user->syncRoles([$request->role]);
+    $user = User::findOrFail($request->user_id);
 
-        return back()->with('success', 'Role assigned successfully.');
-    }
+    // Synchronisation du rôle
+    $user->syncRoles([$request->role]);
 
-    public function getUsers($organizationId)
-    {
-        $users = User::where('organization_id', $organizationId)
-            ->select('id', 'name', 'email')
-            ->get();
+    return back()->with('success', "Le rôle '{$request->role}' a été attribué avec succès à {$user->name}.");
+}
 
-        return response()->json($users);
-    }
+public function getUsers($organizationId)
+{
+    $users = User::where('organization_id', $organizationId)
+        ->select('id', 'name', 'email')
+        ->get();
+
+    return response()->json($users);
+}
 }

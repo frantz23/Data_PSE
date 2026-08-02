@@ -10,7 +10,7 @@
         <!-- En-tête / Navigation -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <a href="{{ route('showIndicator', $indicatorValue->id) }}" class="btn btn-outline-secondary btn-sm mb-2">
+                <a href="{{ route('showIndicator', $indicatorValue->indicator_id) }}" class="btn btn-outline-secondary btn-sm mb-2">
                     <i class="bi bi-arrow-left"></i> Retour à l'indicateur
                 </a>
                 <h3 class="fw-bold m-0">Détail de la valeur collectée</h3>
@@ -22,14 +22,18 @@
                     <i class="bi bi-pencil me-1"></i> Modifier
                 </a>
                 <a href="{{ route('createIVFile', $indicatorValue->id) }}" class="btn border-dark btn-info">
-                    <i class="bi bi-puzzle"></i> Pièce(s) justificative(s)</a>
-                <a href="#" data-id="{{ $indicatorValue->id }}" class="btn btn-danger deleteBtn">
-                    <i class="bi-solid bi-trash"></i> Supprimer
+                    <i class="bi bi-puzzle"></i> Pièce(s) justificative(s)
                 </a>
+                <button type="button"
+                        data-id="{{ $indicatorValue->id }}"
+                        data-redirect="{{ route('showIndicator', $indicatorValue->indicator_id) }}"
+                        class="btn btn-danger deleteBtn">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
+
                 @if (Auth::user()->hasRole('adminONG'))
                     @if (!$indicatorValue->validated)
-                        <form action="{{ route('validateIndicatorValue', $indicatorValue->id) }}" method="POST"
-                            class="d-inline">
+                        <form action="{{ route('validateIndicatorValue', $indicatorValue->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-success"
@@ -111,6 +115,156 @@
                     </div>
                 </div>
 
+                <!-- Carte des pièces jointes / Fichiers -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold m-0 text-dark">
+                            <i class="bi bi-paperclip me-2 text-primary"></i>Fichiers et pièces jointes
+                            ({{ $indicatorValue->indicatorvaluefiles->count() }})
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        @if ($indicatorValue->indicatorvaluefiles->count() > 0)
+                            <div class="list-group list-group-flush">
+                                @foreach ($indicatorValue->indicatorvaluefiles as $file)
+                                    <div class="list-group-item d-flex align-items-center justify-content-between p-3">
+
+                                        <!-- Nom et icône du fichier -->
+                                        <div class="d-flex align-items-center">
+                                            @if (str_contains($file->mime_type, 'spreadsheet') || str_contains($file->file_name, '.xlsx') || str_contains($file->file_name, '.xls'))
+                                                <i class="bi bi-file-earmark-excel fs-2 text-success me-3"></i>
+                                            @elseif(str_contains($file->mime_type, 'pdf'))
+                                                <i class="bi bi-file-earmark-pdf fs-2 text-danger me-3"></i>
+                                            @elseif(str_contains($file->mime_type, 'image'))
+                                                <i class="bi bi-file-earmark-image fs-2 text-info me-3"></i>
+                                            @else
+                                                <i class="bi bi-file-earmark-text fs-2 text-secondary me-3"></i>
+                                            @endif
+
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-dark">{{ $file->file_name }}</h6>
+                                                <small class="text-muted">
+                                                    Taille : {{ number_format($file->file_size / 1024, 1) }} Ko •
+                                                    Ajouté le {{ $file->created_at->format('d/m/Y à H:i') }}
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Bouton Télécharger / Visualiser -->
+                                        <a href="{{ Storage::url($file->file_path) }}" target="_blank"
+                                           class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                            <i class="bi bi-download me-1"></i> Télécharger
+                                        </a>
+
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="p-4 text-center text-muted">
+                                <i class="bi bi-folder2-open fs-1 opacity-50 d-block mb-2"></i>
+                                <p class="mb-0 small">Aucune pièce jointe n'a encore été déposée pour cet indicateur.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Notes & Fil d'échanges -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="fw-bold mb-0 text-dark">
+                            <i class="bi bi-chat-left-text me-2 text-primary"></i>Notes & Fil d'échanges
+                        </h5>
+                        <span class="badge bg-light text-dark border">
+                            {{ $indicatorValue->comments->count() }} note(s)
+                        </span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {{-- Formulaire d'ajout de note principale --}}
+                        <form action="{{ route('storeIndicatorValueComment', $indicatorValue->id) }}" method="POST" class="mb-4">
+                            @csrf
+                            <div class="mb-2">
+                                <textarea name="content" class="form-control" rows="3" placeholder="Rédigez une note ou posez une question sur cette donnée..." required></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary btn-sm px-4 rounded-pill">
+                                    <i class="bi bi-send me-1"></i> Envoyer la note
+                                </button>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+
+                        {{-- Liste des messages --}}
+                        <div class="d-flex flex-column gap-3">
+                            @forelse($indicatorValue->comments as $comment)
+                                <div class="p-3 bg-light rounded border">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px;">
+                                                {{ strtoupper(substr($comment->user->name ?? 'U', 0, 1)) }}
+                                            </div>
+                                            <span class="fw-bold text-dark">{{ $comment->user->name ?? 'Utilisateur' }}</span>
+                                        </div>
+                                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
+                                    </div>
+
+                                    <p class="mb-2 text-secondary ms-4 ps-2" style="white-space: pre-line;">{{ $comment->content }}</p>
+
+                                    <!-- Bouton de réponse -->
+                                    <div class="ms-4 ps-2 mb-2">
+                                        <button type="button" class="btn btn-sm btn-link text-primary p-0 text-decoration-none fw-semibold"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#replyForm-{{ $comment->id }}"
+                                                aria-expanded="false">
+                                            <i class="bi bi-reply-fill me-1"></i> Répondre
+                                        </button>
+                                    </div>
+
+                                    <!-- Formulaire de réponse (Masqué par défaut via Bootstrap Collapse) -->
+                                    <div class="collapse ms-4 ps-2 mb-3" id="replyForm-{{ $comment->id }}">
+                                        <form action="{{ route('storeIndicatorValueComment', $indicatorValue->id) }}" method="POST" class="bg-white p-3 rounded border">
+                                            @csrf
+                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                            <div class="mb-2">
+                                                <textarea name="content" class="form-control form-control-sm" rows="2" placeholder="Votre réponse..." required></textarea>
+                                            </div>
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button type="button" class="btn btn-light btn-sm rounded-pill border" data-bs-toggle="collapse" data-bs-target="#replyForm-{{ $comment->id }}">
+                                                    Annuler
+                                                </button>
+                                                <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+                                                    <i class="bi bi-send me-1"></i> Répondre
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    {{-- Réponses éventuelles --}}
+                                    @if($comment->replies && $comment->replies->count() > 0)
+                                        <div class="ms-4 mt-3 pt-2 border-top">
+                                            @foreach($comment->replies as $reply)
+                                                <div class="bg-white p-2 rounded mb-2 border">
+                                                    <div class="d-flex justify-content-between small">
+                                                        <strong class="text-dark">{{ $reply->user->name ?? 'Utilisateur' }}</strong>
+                                                        <span class="text-muted">{{ $reply->created_at->diffForHumans() }}</span>
+                                                    </div>
+                                                    <p class="small text-secondary mb-0 mt-1">{{ $reply->content }}</p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
+                            @empty
+                                <div class="text-center text-muted py-3">
+                                    <i class="bi bi-chat-square-dots d-block fs-3 mb-2 opacity-50"></i>
+                                    <p class="mb-0">Aucun commentaire ni remarque sur cette collecte pour le moment.</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Colonne Droite : Rappel du Contexte (Indicateur & Projet) -->
@@ -143,338 +297,78 @@
                     </div>
                 </div>
             </div>
-
-        </div>
-        <!-- Carte des pièces jointes / Fichiers -->
-        <div class="card border-0 shadow-sm mb-4">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h5 class="fw-bold m-0 text-dark">
-                    <i class="bi bi-paperclip me-2 text-primary"></i>Fichiers et pièces jointes
-                    ({{ $indicatorValue->indicatorvaluefiles->count() }})
-                </h5>
-            </div>
-            <div class="card-body p-0">
-                @if ($indicatorValue->indicatorvaluefiles->count() > 0)
-                    <div class="list-group list-group-flush">
-                        @foreach ($indicatorValue->indicatorvaluefiles as $file)
-                            <div class="list-group-item d-flex align-items-center justify-content-between p-3">
-
-                                <!-- Nom et icône du fichier -->
-                                <div class="d-flex align-items-center">
-                                    @if (str_contains($file->mime_type, 'spreadsheet') ||
-                                            str_contains($file->file_name, '.xlsx') ||
-                                            str_contains($file->file_name, '.xls'))
-                                        <i class="bi bi-file-earmark-excel fs-2 text-success me-3"></i>
-                                    @elseif(str_contains($file->mime_type, 'pdf'))
-                                        <i class="bi bi-file-earmark-pdf fs-2 text-danger me-3"></i>
-                                    @elseif(str_contains($file->mime_type, 'image'))
-                                        <i class="bi bi-file-earmark-image fs-2 text-info me-3"></i>
-                                    @else
-                                        <i class="bi bi-file-earmark-text fs-2 text-secondary me-3"></i>
-                                    @endif
-
-                                    <div>
-                                        <h6 class="mb-0 fw-bold text-dark">{{ $file->file_name }}</h6>
-                                        <small class="text-muted">
-                                            Taille : {{ number_format($file->file_size / 1024, 1) }} Ko •
-                                            Ajouté le {{ $file->created_at->format('d/m/Y à H:i') }}
-                                        </small>
-                                    </div>
-                                </div>
-
-                                <!-- Bouton Télécharger / Visualiser -->
-                                <a href="{{ Storage::url($file->file_path) }}" target="_blank"
-                                    class="btn btn-outline-primary btn-sm rounded-pill px-3">
-                                    <i class="bi bi-download me-1"></i> Télécharger
-                                </a>
-
-                            </div>
-                        @endforeach
-                    </div>
-                @else
-                    <div class="p-4 text-center text-muted">
-                        <i class="bi bi-folder2-open fs-1 opacity-50 d-block mb-2"></i>
-                        <p class="mb-0 small">Aucune pièce jointe n'a encore été déposée pour cet indicateur.</p>
-                    </div>
-                @endif
-            </div>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm mt-4">
-    <div class="card-header bg-white border-0 py-3 d-flex justify-content-between align-items-center">
-        <h5 class="fw-bold mb-0 text-dark">
-            <i class="bi bi-chat-left-text me-2 text-primary"></i>Notes & Fil d'échanges
-        </h5>
-        <span class="badge bg-light text-dark border">
-            {{ $indicatorValue->comments->count() }} note(s)
-        </span>
-    </div>
-
-    <div class="card-body p-4">
-        {{-- Formulaire d'ajout de note --}}
-        <form action="{{ route('storeIndicatorValueComment', $indicatorValue->id) }}" method="POST" class="mb-4">
-            @csrf
-            <div class="mb-2">
-                <textarea name="content" class="form-control" rows="3" placeholder="Rédigez une note ou posez une question sur cette donnée..." required></textarea>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary btn-sm px-4 rounded-pill">
-                    <i class="bi bi-send me-1"></i> Envoyer la note
-                </button>
-            </div>
-        </form>
-
-        <hr class="my-4">
-
-        {{-- Liste des messages --}}
-        <div class="d-flex flex-column gap-3">
-            @forelse($indicatorValue->comments as $comment)
-                <div class="p-3 bg-light rounded border">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <div class="d-flex align-items-center gap-2">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 32px; height: 32px;">
-                                {{ strtoupper(substr($comment->user->name ?? 'U', 0, 1)) }}
-                            </div>
-                            <span class="fw-bold text-dark">{{ $comment->user->name ?? 'Utilisateur' }}</span>
-                        </div>
-                        <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                    </div>
-
-                    <p class="mb-1 text-secondary ms-4 ps-2" style="white-space: pre-line;">{{ $comment->content }}</p>
-
-                    {{-- Réponses éventuelles --}}
-                    @if($comment->replies && $comment->replies->count() > 0)
-                        <div class="ms-4 mt-3 pt-2 border-top">
-                            @foreach($comment->replies as $reply)
-                                <div class="bg-white p-2 rounded mb-2 border">
-                                    <div class="d-flex justify-content-between small">
-                                        <strong class="text-dark">{{ $reply->user->name ?? 'Utilisateur' }}</strong>
-                                        <span class="text-muted">{{ $reply->created_at->diffForHumans() }}</span>
-                                    </div>
-                                    <p class="small text-secondary mb-0 mt-1">{{ $reply->content }}</p>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
-            @empty
-                <div class="text-center text-muted py-3">
-                    <i class="bi bi-chat-square-dots d-block fs-3 mb-2 opacity-50"></i>
-                    <p class="mb-0">Aucun commentaire ni remarque sur cette collecte pour le moment.</p>
-                </div>
-            @endforelse
-        </div>
-    </div>
-</div>
-
+    <!-- Modal de Confirmation de Suppression -->
     <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title fs-5" id="confirmModalLabel">Delete confirm</h3>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fs-5" id="confirmModalLabel">Confirmation de suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    Voulez-vous vraiment supprimer cette valeur collectée ? Cette action est irréversible.
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary confirmDeleteAction">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger confirmDeleteAction">Supprimer</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Script JS Réorganisé -->
     <script>
-        const checkboxs = document.querySelectorAll('input[type="checkbox"]')
+        document.addEventListener('DOMContentLoaded', function() {
+            let deleteTargetId = null;
+            let redirectUrl = null;
 
-        checkboxs.forEach((checkbox) => {
+            const modalElement = document.getElementById('confirmModal');
+            const confirmModal = new bootstrap.Modal(modalElement);
+            const confirmDeleteBtn = document.querySelector('.confirmDeleteAction');
 
-            checkbox.onchange = async (event) => {
-                const {
-                    checked,
-                    name,
-                    dataset
-                } = event.target;
-                const {
-                    id
-                } = dataset;
-                console.log({
-                    checked,
-                    name,
-                    id
+            // 1. Déclenchement du modal de suppression
+            document.querySelectorAll('.deleteBtn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    deleteTargetId = button.dataset.id;
+                    redirectUrl = button.dataset.redirect;
+                    confirmModal.show();
                 });
-                const data = {
-                    [name]: checked.toString()
-                };
-                const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-                const response = await fetch('/indicatorvalues/speed/' + id, {
-                    method: 'PUT',
-                    body: JSON.stringify(
-                        data), // Utilisation de JSON.stringify au lieu de JSON.stringfy
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    }
-                });
-            };
-        })
+            });
 
-        const deleteButtons = document.querySelectorAll('.deleteBtn')
-        deleteButtons.forEach(deleteButton => {
-            deleteButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                const {
-                    id,
-                    title
-                } = deleteButton.dataset
-                const modalBody = document.querySelector('.modal-body')
-                modalBody.innerHTML = `Are you sure you want to delete this data ?</strong> `
-                console.log({
-                    id,
-                    title
-                });
-                const modal = new bootstrap.Modal(document.querySelector('#confirmModal'))
-                modal.show()
-                const confirmDeleteBtn = document.querySelector('.confirmDeleteAction')
+            // 2. Action de suppression AJAX
+            confirmDeleteBtn.addEventListener('click', async () => {
+                if (!deleteTargetId) return;
 
-                confirmDeleteBtn.addEventListener('click', async () => {
-                    const csrfToken = document.head.querySelector('meta[name="csrf-token"]')
-                        .content;
-                    const response = await fetch('/indicatorvalues/delete/' + id, {
+                const csrfToken = document.head.querySelector('meta[name="csrf-token"]')?.content;
+
+                try {
+                    const response = await fetch(`/indicatorvalues/delete/${deleteTargetId}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': csrfToken
                         }
-                    })
+                    });
 
-                    const result = await response.json()
+                    const result = await response.json();
 
-                    if (result && result.isSuccess) {
-                        window.location.href = window.location.href;
+                    if (response.ok && result?.isSuccess) {
+                        // Redirection vers la page parent au lieu de recharger
+                        window.location.href = redirectUrl || '/';
+                    } else {
+                        alert(result.message || 'Une erreur est survenue lors de la suppression.');
                     }
-
-
-                    modal.hide()
-                })
-            })
-
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const tableHeaders = document.querySelectorAll('#Indicatorvalue th');
-            const columnSelector = document.getElementById('columnSelector');
-
-            tableHeaders.forEach(function(header, index) {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                const div = document.createElement('div');
-                a.className = 'dropdown-item';
-                div.className = 'form-check form-switch';
-                const label = document.createElement('label');
-                const checkbox = document.createElement('input');
-                checkbox.type = 'checkbox';
-                checkbox.role = "switch"
-                checkbox.className = 'columnSelector form-check-input';
-                checkbox.dataset.column = index;
-                const savedSelection = localStorage.getItem('selectedColumns#Indicatorvalue');
-                checkbox.checked = !!!savedSelection; // Sélectionner par défaut
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-                    saveSelection();
-                });
-
-                label.appendChild(document.createTextNode(header.textContent));
-                div.appendChild(label)
-                div.appendChild(checkbox)
-                a.appendChild(div);
-                li.appendChild(a);
-                columnSelector.appendChild(li);
-
-                header.addEventListener('click', function() {
-                    sortTable(index);
-                });
-
-                if (savedSelection) {
-                    const selectedColumns = JSON.parse(savedSelection);
-                    toggleColumn(parseInt(index), selectedColumns.includes(index));
+                } catch (error) {
+                    console.error('Erreur:', error);
+                    alert('Impossible de contacter le serveur.');
+                } finally {
+                    confirmModal.hide();
                 }
             });
-
-
-            const checkboxes = document.querySelectorAll('.columnSelector');
-
-            checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    const columnIndex = parseInt(checkbox.dataset.column);
-                    toggleColumn(columnIndex, checkbox.checked);
-
-                    // Sauvegarde la sélection dans le localStorage
-                    saveSelection();
-                });
-            });
-
-            // Chargement des valeurs sauvegardées dans le localStorage
-            loadSavedSelection();
         });
-
-        function toggleColumn(columnIndex, show) {
-            const dataTable = document.getElementById('Indicatorvalue');
-            const cells = dataTable.querySelectorAll(
-                `tr td:nth-child(${columnIndex + 1}), th:nth-child(${columnIndex + 1})`);
-
-            cells.forEach(function(cell) {
-                if (show) {
-                    cell.style.display = ''; // Affiche la colonne
-                } else {
-                    cell.style.display = 'none'; // Masque la colonne
-                }
-            });
-        }
-
-        function saveSelection() {
-            const selectedColumns = Array.from(document.querySelectorAll('.columnSelector'))
-                .filter(c => c.checked)
-                .map(c => c.dataset.column);
-            localStorage.setItem('selectedColumns#Indicatorvalue', JSON.stringify(selectedColumns));
-        }
-
-        function loadSavedSelection() {
-            const savedSelection = localStorage.getItem('selectedColumns#Indicatorvalue');
-            if (savedSelection) {
-                const selectedColumns = JSON.parse(savedSelection);
-                selectedColumns.forEach(function(columnIndex) {
-                    const checkbox = document.querySelector(`.columnSelector[data-column="${columnIndex}"]`);
-                    if (checkbox) {
-                        checkbox.checked = true;
-                        toggleColumn(parseInt(columnIndex), true);
-                    }
-                });
-            }
-        }
-
-        function sortTable(columnIndex) {
-            const table = document.getElementById('Indicatorvalue');
-            const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-            console.log({
-                rows
-            });
-
-            rows.sort((a, b) => {
-                const cellA = a.querySelectorAll('td')[columnIndex].textContent;
-                const cellB = b.querySelectorAll('td')[columnIndex].textContent;
-
-                return cellA.localeCompare(cellB, undefined, {
-                    numeric: true,
-                    sensitivity: 'base'
-                });
-            });
-
-            table.querySelector('tbody').innerHTML = '';
-            rows.forEach(row => table.querySelector('tbody').appendChild(row));
-        }
     </script>
 @endsection
