@@ -50,7 +50,7 @@
                             </div>
 
                             <!-- Code -->
-                            {{-- <div class="col-md-6">
+                            <div class="col-md-6">
                                 <label for="code" class="form-label fw-semibold">Code / Référence</label>
                                 <input type="text" name="code" id="code"
                                     value="{{ old('code', $indicator->code ?? '') }}"
@@ -59,7 +59,7 @@
                                 @error('code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div> --}}
+                            </div>
 
                             <!-- Nom -->
                             <div class="col-12">

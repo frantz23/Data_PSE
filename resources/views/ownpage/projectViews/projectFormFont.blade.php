@@ -57,7 +57,7 @@
                                 </div>
 
                                 <!-- Code Projet -->
-                                {{-- <div class="col-md-4">
+                                <div class="col-md-4">
                                     <label for="code" class="form-label fw-semibold">Code / Référence Projet</label>
                                     <input type="text" name="code" id="code"
                                         value="{{ old('code', $project->code ?? '') }}"
@@ -66,7 +66,7 @@
                                     @error('code')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                </div> --}}
+                                </div>
 
                                 <!-- Nom du Projet -->
                                 <div class="col-12">

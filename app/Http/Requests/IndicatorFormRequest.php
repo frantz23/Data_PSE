@@ -25,6 +25,7 @@ class IndicatorFormRequest extends FormRequest
         return [
             //
             'name' => $isRequired.'string',
+            'code' => $isRequired.'string',
 			'description' => $isRequired.'string',
 			'result_level' => $isRequired.'string',
 			'data_type' => $isRequired.'string',

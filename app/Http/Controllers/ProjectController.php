@@ -122,7 +122,7 @@ class ProjectController extends Controller
         $data = $req->validated();
         $data['organization_id'] = auth()->user()->organization_id;
         $data['user_id'] = auth()->id();
-        $data['code']= Project::generateCode();
+        // $data['code']= Project::generateCode();
 
 
         $project = Project::create($data);

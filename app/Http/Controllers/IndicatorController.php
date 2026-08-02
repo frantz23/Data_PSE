@@ -121,7 +121,7 @@ class IndicatorController extends Controller
         $data = $req->validated();
         $data['organization_id'] = auth()->user()->organization_id;
         $data['user_id'] = auth()->id();
-        $data['code']= Indicator::generateCode();
+        // $data['code']= Indicator::generateCode();
 
 
         $indicator = Indicator::create($data);
