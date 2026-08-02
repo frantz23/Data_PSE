@@ -58,5 +58,5 @@ class Activity extends Model
         return $this->belongsToMany(Indicator::class);
     }
 
-	protected $fillable = ['name', 'description', 'budget', 'start_date', 'end_date', 'status', 'completion_rate', 'project_id', 'organization_id', 'parent_activity_id', 'user_id', 'assigned_to'];
+	protected $fillable = ['name', 'code', 'description', 'budget', 'start_date', 'end_date', 'status', 'completion_rate', 'project_id', 'organization_id', 'parent_activity_id', 'user_id', 'assigned_to'];
 }

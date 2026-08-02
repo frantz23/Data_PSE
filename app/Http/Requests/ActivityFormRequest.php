@@ -25,6 +25,7 @@ class ActivityFormRequest extends FormRequest
         return [
             //
             'name' => $isRequired.'string',
+            'code' => $isRequired.'string|nullable',
 			'description' => $isRequired.'string',
 			'budget' => $isRequired.'string',
 			'start_date' => $isRequired.'string',
@@ -40,7 +41,7 @@ class ActivityFormRequest extends FormRequest
     public function prepareForValidation()
     {
         $this->merge([
-            
+
         ]);
     }
 }
