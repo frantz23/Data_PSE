@@ -85,7 +85,7 @@ class ProgramController extends Controller
 
     public function indexProgram(): View
     {
-        $programs = Program::orderBy('created_at', 'desc')->paginate(5);
+        $programs = Program::where('organization_id', auth()->user()->organization_id)->paginate(12);
         return view('ownpage.programViews.index', ['programs' => $programs]);
     }
     public function showProgram($id): View

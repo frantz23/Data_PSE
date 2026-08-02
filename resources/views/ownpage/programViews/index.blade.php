@@ -1,129 +1,86 @@
-@extends('sample')
+@extends('ownpage.pannel.adminONG')
 
-@section('title')
-    Programs
-@endsection
+@section('title', 'Programs')
 
-@section('content')
-    <div class="container-fluid py-4">
+@section('admin-content')
+    {{-- EN-TÊTE --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">📚 Programs</h4>
+            <p class="text-muted small mb-0">Manage all your organization programs</p>
+        </div>
 
-        <div class="row">
+        <a href="{{ route('createProgram') }}" class="btn btn-primary rounded-pill px-3 shadow-sm">
+            <i class="bi bi-plus-lg me-1"></i> Create Program
+        </a>
+    </div>
 
-            <!-- LEFT SIDEBAR -->
-            @include('ownpage.partials.menu')
+    {{-- GRILLE DES PROGRAMMES --}}
+    <div class="row g-4">
+        @forelse($programs as $program)
+            <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow-sm rounded-3 h-100 bg-light-subtle">
+                    <div class="card-body p-3 d-flex flex-column justify-content-between">
 
-            <!-- RIGHT CONTENT -->
-            <div class="col-md-9">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">{{ $program->name }}</h6>
+                                    <span class="badge bg-white text-secondary border mt-1" style="font-size: 0.7rem;">
+                                        {{ $program->code }}
+                                    </span>
+                                </div>
 
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div>
-                                <h3 class="mb-0">Programs</h3>
-                                <small class="text-muted">Manage all your organization programs</small>
+                                <span class="badge rounded-pill
+                                    @if ($program->status == 'active') bg-success-subtle text-success border border-success-subtle
+                                    @elseif($program->status == 'draft') bg-secondary-subtle text-secondary border border-secondary-subtle
+                                    @elseif($program->status == 'completed') bg-primary-subtle text-primary border border-primary-subtle
+                                    @else bg-danger-subtle text-danger border border-danger-subtle @endif">
+                                    {{ ucfirst($program->status) }}
+                                </span>
                             </div>
 
-                            <a href="{{ route('createProgram') }}" class="btn btn-primary">
-                                + Create Program
-                            </a>
+                            <p class="text-muted small mb-3">
+                                {{ Str::limit($program->description, 85) }}
+                            </p>
+
+                            <div class="bg-white p-2 rounded-3 border mb-3">
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted">Budget</span>
+                                    <strong class="text-dark">{{ number_format($program->budget, 0, ',', ' ') }} {{ $program->currency }}</strong>
+                                </div>
+                                <div class="d-flex justify-content-between small mb-1">
+                                    <span class="text-muted">Start</span>
+                                    <span class="text-dark">{{ $program->start_date ?? '-' }}</span>
+                                </div>
+                                <div class="d-flex justify-content-between small">
+                                    <span class="text-muted">End</span>
+                                    <span class="text-dark">{{ $program->end_date ?? '-' }}</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="row g-4">
-
-                            @forelse($programs as $program)
-                                <div class="col-md-6 col-lg-4">
-
-                                    <div class="card border-0 shadow-sm h-100 program-card">
-
-                                        <div class="card-body">
-
-                                            <!-- HEADER -->
-                                            <div class="d-flex justify-content-between align-items-start mb-2">
-
-                                                <div>
-                                                    <h5 class="mb-1">{{ $program->name }}</h5>
-                                                    <small class="text-muted">
-                                                        {{ $program->code }}
-                                                    </small>
-                                                </div>
-
-                                                <!-- STATUS BADGE -->
-                                                <span
-                                                    class="badge
-                            @if ($program->status == 'active') bg-success
-                            @elseif($program->status == 'draft') bg-secondary
-                            @elseif($program->status == 'completed') bg-primary
-                            @else bg-danger @endif
-                        ">
-                                                    {{ ucfirst($program->status) }}
-                                                </span>
-
-                                            </div>
-
-                                            <!-- DESCRIPTION -->
-                                            <p class="text-muted small mb-3">
-                                                {{ Str::limit($program->description, 90) }}
-                                            </p>
-
-                                            <!-- METADATA -->
-                                            <div class="mb-3">
-
-                                                <div class="d-flex justify-content-between small">
-                                                    <span>Budget</span>
-                                                    <strong>{{ number_format($program->budget, 0, ',', ' ') }}
-                                                        {{ $program->currency }}</strong>
-                                                </div>
-
-                                                <div class="d-flex justify-content-between small">
-                                                    <span>Start</span>
-                                                    <span>{{ $program->start_date ?? '-' }}</span>
-                                                </div>
-
-                                                <div class="d-flex justify-content-between small">
-                                                    <span>End</span>
-                                                    <span>{{ $program->end_date ?? '-' }}</span>
-                                                </div>
-
-                                            </div>
-
-                                            <!-- ACTIONS -->
-                                            <div class="d-flex gap-2">
-
-                                                <a href="{{ route('showProgram', $program->id) }}"
-                                                    class="btn btn-sm btn-outline-primary w-100">
-                                                    View
-                                                </a>
-
-                                                <a href="{{ route('editProgram', $program->id) }}"
-                                                    class="btn btn-sm btn-outline-warning w-100">
-                                                    Edit
-                                                </a>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            @empty
-
-                                <div class="col-12 text-center py-5">
-                                    <h5 class="text-muted">No programs found</h5>
-                                    <p class="text-muted">Create your first program to get started</p>
-                                </div>
-                            @endforelse
-
+                        <div class="d-flex gap-2 pt-2 border-top">
+                            <a href="{{ route('showProgram', $program->id) }}" class="btn btn-sm btn-outline-primary rounded-2 w-100">
+                                <i class="bi bi-eye me-1"></i> View
+                            </a>
+                            <a href="{{ route('editProgram', $program->id) }}" class="btn btn-sm btn-outline-warning rounded-2 w-100">
+                                <i class="bi bi-pencil me-1"></i> Edit
+                            </a>
                         </div>
 
                     </div>
                 </div>
             </div>
-
-        </div>
-
-    </div>
-
+        @empty
+            <div class="col-12 text-center py-5">
+                <i class="bi bi-journal-x d-block fs-1 text-secondary mb-2 opacity-50"></i>
+                <h6 class="fw-bold text-dark mb-1">No programs found</h6>
+                <p class="text-muted small mb-3">Create your first program to get started</p>
+                <a href="{{ route('createProgram') }}" class="btn btn-primary btn-sm rounded-pill px-3">
+                    <i class="bi bi-plus-lg me-1"></i> Create Program
+                </a>
+            </div>
+        @endforelse
     </div>
 @endsection
