@@ -108,7 +108,7 @@ class ProgramController extends Controller
         $data = $req->validated();
         $data['organization_id'] = auth()->user()->organization_id;
         $data['user_id'] = auth()->id();
-        $data['code'] = Program::generateCode();
+        // $data['code'] = Program::generateCode();
 
         $program = Program::create($data);
         return redirect()->route('showProgram', ['id' => $program->id]);

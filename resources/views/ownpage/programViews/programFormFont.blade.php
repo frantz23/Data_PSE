@@ -33,7 +33,7 @@
                         </h6>
                         <div class="row g-3">
                             <!-- Code / Référence -->
-                            {{-- <div class="col-md-4">
+                            <div class="col-md-4">
                                 <label for="code" class="form-label fw-semibold">Code / Référence</label>
                                 <input type="text" name="code" id="code"
                                     value="{{ old('code', $program->code ?? '') }}"
@@ -42,7 +42,7 @@
                                 @error('code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                            </div> --}}
+                            </div>
 
                             <!-- Nom du Programme -->
                             <div class="col-md-8">

@@ -33,7 +33,7 @@ class ProgramFormRequest extends FormRequest
                 'string',
                 Rule::unique('projects', 'name')->ignore($programId),
             ],
-			// 'code' => $isRequired.'string',
+			'code' => $isRequired.'string',
 			'description' => 'nullable|string',
 			'budget' => $isRequired.'numeric',
 			'donor' => $isRequired.'string',
