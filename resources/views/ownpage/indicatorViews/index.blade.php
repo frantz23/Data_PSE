@@ -35,7 +35,8 @@
                                 </div>
 
                                 <!-- BADGE DE STATUT -->
-                                <span class="badge rounded-pill
+                                <span
+                                    class="badge rounded-pill
                                     @if ($indicator->status === 'active') bg-success-subtle text-success border border-success-subtle
                                     @elseif($indicator->status === 'draft') bg-warning-subtle text-warning border border-warning-subtle
                                     @else bg-secondary-subtle text-secondary border border-secondary-subtle @endif">
@@ -45,14 +46,18 @@
 
                             <!-- PROJET ET NIVEAU GAR -->
                             <div class="d-flex justify-content-between align-items-center mb-3 pt-1">
-                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-medium text-truncate" style="max-width: 140px; font-size: 0.72rem;">
+                                <span
+                                    class="badge bg-primary-subtle text-primary border border-primary-subtle fw-medium text-truncate"
+                                    style="max-width: 140px; font-size: 0.72rem;">
                                     <i class="bi bi-folder me-1"></i>{{ $indicator->project->name ?? 'Aucun projet' }}
                                 </span>
 
-                                <span class="badge
+                                <span
+                                    class="badge
                                     @if ($indicator->result_level === 'impact') bg-dark text-white
                                     @elseif($indicator->result_level === 'outcome') bg-info-subtle text-info border border-info-subtle
-                                    @else bg-light text-dark border @endif" style="font-size: 0.7rem;">
+                                    @else bg-light text-dark border @endif"
+                                    style="font-size: 0.7rem;">
                                     GAR: {{ strtoupper($indicator->result_level) }}
                                 </span>
                             </div>
@@ -74,7 +79,8 @@
                                     <div class="col-6">
                                         <span class="text-muted d-block" style="font-size: 0.7rem;">Valeur Actuelle</span>
                                         <strong class="text-primary small">
-                                            {{ number_format($indicator->current_value, 0, ',', ' ') }} {{ $indicator->unit }}
+                                            {{ number_format($indicator->current_value, 0, ',', ' ') }}
+                                            {{ $indicator->unit }}
                                         </strong>
                                     </div>
                                     <div class="col-6">
@@ -85,7 +91,8 @@
                                     </div>
                                     <div class="col-6">
                                         <span class="text-muted d-block" style="font-size: 0.7rem;">Fréquence</span>
-                                        <span class="fw-semibold text-capitalize text-dark small">{{ $indicator->frequency }}</span>
+                                        <span
+                                            class="fw-semibold text-capitalize text-dark small">{{ $indicator->frequency }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -104,11 +111,8 @@
                                         @if ($progress >= 100) bg-success
                                         @elseif($progress >= 50) bg-primary
                                         @else bg-warning @endif"
-                                        role="progressbar"
-                                        style="width: {{ min(100, $progress) }}%"
-                                        aria-valuenow="{{ $progress }}"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100">
+                                        role="progressbar" style="width: {{ min(100, $progress) }}%"
+                                        aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
                                     </div>
                                 </div>
                             </div>
@@ -117,10 +121,12 @@
 
                         <!-- BOUTONS D'ACTION -->
                         <div class="d-flex gap-2 pt-2 border-top">
-                            <a href="{{ route('showIndicator', $indicator->id) }}" class="btn btn-sm btn-outline-primary rounded-2 w-100">
+                            <a href="{{ route('showIndicator', $indicator->id) }}"
+                                class="btn btn-sm btn-outline-primary rounded-2 w-100">
                                 <i class="bi bi-eye me-1"></i> Voir
                             </a>
-                            <a href="{{ route('editIndicator', $indicator->id) }}" class="btn btn-sm btn-outline-warning rounded-2 w-100">
+                            <a href="{{ route('editIndicator', $indicator->id) }}"
+                                class="btn btn-sm btn-outline-warning rounded-2 w-100">
                                 <i class="bi bi-pencil me-1"></i> Éditer
                             </a>
                         </div>
@@ -140,4 +146,10 @@
             </div>
         @endforelse
     </div>
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ $indicators->links('pagination::bootstrap-5') }}
+    </div>
+
+
 @endsection

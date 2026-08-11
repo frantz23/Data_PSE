@@ -6,35 +6,55 @@ use Illuminate\Database\Eloquent\Model;
 
 class Program extends Model
 {
-	//
-	public static function generateCode()
-	{
-		$lastProgram = self::latest('id')->first();
-		$nextNumber = $lastProgram ? $lastProgram->id + 1 : 1;
+    //
+    public static function generateCode()
+    {
+        $lastProgram = self::latest('id')->first();
+        $nextNumber = $lastProgram ? $lastProgram->id + 1 : 1;
 
-		return 'PRG-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
-	}
+        return 'PRG-' . str_pad($nextNumber, 4, '0', STR_PAD_LEFT);
+    }
 
-	public function organization()
-	{
+    public function organization()
+    {
 
-		return $this->belongsTo(\App\Models\Organization::class);
-	}
+        return $this->belongsTo(\App\Models\Organization::class);
+    }
 
 
-	protected $fillable = ['name', 'code', 'description', 'budget', 'donor', 'currency', 'funding_partner', 'start_date', 'end_date', 'status', 'organization_id', 'user_id'];
+    protected $fillable = ['name', 'code', 'description', 'budget', 'donor_id', 'currency', 'funding_partner', 'start_date', 'end_date', 'status', 'organization_id', 'user_id'];
 
-	public function user()
-	{
+    public function user()
+    {
 
-		return $this->belongsTo(\App\Models\User::class);
-	}
+        return $this->belongsTo(\App\Models\User::class);
+    }
 
-	public function projects()
-	{
-		
-		return $this->hasMany(\App\Models\Project::class);
-	
-	}
+    public function projects()
+    {
 
+        return $this->hasMany(\App\Models\Project::class, 'program_id');
+    }
+
+    // ✅ CORRECT : retourne une instance unique de Donor
+    public function donor()
+    {
+        return $this->belongsTo(Donor::class, 'donor_id');
+    }
+
+    public function donorprograms()
+    {
+
+        return $this->hasMany(\App\Models\DonorProgram::class, 'donor_id');
+    }
+
+    /**
+     * Les bailleurs qui financent ce programme
+     */
+    public function Ddonors()
+    {
+        return $this->belongsToMany(Donor::class, 'donorprograms')
+            ->withPivot('amount_contributed')
+            ->withTimestamps();
+    }
 }

@@ -112,5 +112,9 @@
                 </a>
             </div>
         @endforelse
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center">
+            {{ $activities->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 @endsection

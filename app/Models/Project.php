@@ -17,25 +17,25 @@ class Project extends Model
 
 	public function program()
 	{
-		
-		return $this->belongsTo(\App\Models\Program::class);
-	
+
+		return $this->belongsTo(\App\Models\Program::class,'program_id');
+
 	}
 
 
 	public function organization()
 	{
-		
+
 		return $this->belongsTo(\App\Models\Organization::class);
-	
+
 	}
 
 
 	public function user()
 	{
-		
+
 		return $this->belongsTo(\App\Models\User::class);
-	
+
 	}
 
 
@@ -44,17 +44,17 @@ class Project extends Model
 
 	public function activities()
 	{
-		
+
 		return $this->hasMany(\App\Models\Activity::class);
-	
+
 	}
 
 
 	public function indicators()
 	{
-		
+
 		return $this->hasMany(\App\Models\Indicator::class);
-	
+
 	}
 
 }

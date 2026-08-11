@@ -94,7 +94,7 @@
                         </div>
                         <div>
                             <span class="text-muted small text-uppercase fw-bold">Bailleur de fonds</span>
-                            <h5 class="mb-0 fw-bold text-dark">{{ $program->donor ?? 'Non renseigné' }}</h5>
+                            <h5 class="mb-0 fw-bold text-dark">{{ $program->donor_id ?? 'Non renseigné' }}</h5>
                         </div>
                     </div>
                 </div>

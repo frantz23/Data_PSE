@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProgramFormRequest;
+use App\Models\Donor;
 use App\Models\Program;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -97,11 +98,13 @@ class ProgramController extends Controller
     public function editProgram($id): View
     {
         $program = Program::findOrFail($id);
-        return view('ownpage.programViews.edit', ['program' => $program]);
+        $donors= Donor::all();
+        return view('ownpage.programViews.edit', ['program' => $program, 'donors'=>$donors]);
     }
     public function createProgram(): View
     {
-        return view('ownpage.programViews.create');
+        $donors= Donor::all();
+        return view('ownpage.programViews.create', compact('donors'));
     }
     public function storeProgram(ProgramFormRequest $req): RedirectResponse
     {

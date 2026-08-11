@@ -31,6 +31,9 @@
                     <a class="nav-link" href="#organization">Organisations</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="#donor">Bailleurs</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="#utilisateur">Utilisateurs</a>
                 </li>
             </ul>
@@ -54,7 +57,7 @@
 </section>
 
 <!-- MAIN CONTENT SECTION -->
-<section class="organization pb-5" >
+<section class="organization pb-5">
     <div class="container">
 
         <!-- ================= SECTION 1: ORGANISATION ================= -->
@@ -100,7 +103,50 @@
             </div>
         </div>
 
-        <!-- ================= SECTION 2: UTILISATEUR ================= -->
+        <!-- ================= SECTION 2: BAILLEURS DE FONDS (DONORS) ================= -->
+        <div class="d-flex justify-content-between align-items-center mb-3" id="donor">
+            <h3 class="fw-bold fs-4 mb-0">
+                <i class="bi bi-bank text-danger me-2"></i>Bailleurs de Fonds
+            </h3>
+            {{-- <a href="{{ route('indexDonor') }}" class="btn btn-gradient-dark btn-sm rounded-pill px-3">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Accéder --}}
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0 mb-5">
+            <div class="card-body p-4">
+                <div class="row align-items-center g-3">
+                    <!-- ICON / AVATAR -->
+                    <div class="col-md-2 text-center">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center border shadow-sm" style="width: 80px; height: 80px;">
+                            <i class="bi bi-cash-stack fs-1 text-danger"></i>
+                        </div>
+                    </div>
+                    <!-- INFOS -->
+                    <div class="col-md-10">
+                        <h5 class="fw-bold mb-1">
+                            Gestion des bailleurs, partenaires financiers et leurs comptes
+                        </h5>
+                        <p class="text-muted mb-0">
+                            Enregistrez les bailleurs de fonds (UE, USAID, Banque Mondiale, etc.), associez-leur des comptes d'accès pour leur portail dédié et suivez leurs programmes financés.
+                        </p>
+                    </div>
+                </div>
+
+                <hr class="my-3 text-muted opacity-25">
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a href="{{ route('createDonor') }}" class="btn btn-outline-dark btn-sm rounded-pill px-3">
+                        <i class="bi bi-plus-circle me-1"></i> Nouveau Bailleur
+                    </a>
+                    <a href="{{ route('indexDonor') }}" class="btn btn-gradient-dark btn-sm rounded-pill px-3">
+                        <i class="bi bi-building-add me-1"></i> Gérer les Bailleurs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= SECTION 3: UTILISATEURS ================= -->
         <div class="d-flex justify-content-between align-items-center mb-3" id="utilisateur">
             <h3 class="fw-bold fs-4 mb-0">
                 <i class="bi bi-people-fill text-danger me-2"></i>Utilisateurs

@@ -7,18 +7,21 @@
 @endpush
 
 @section('content')
-<div class="container-fluid py-4">
+    <div class="container-fluid py-4">
 
 
 
-    {{-- Contenu selon le rôle --}}
-    @if(Auth::user()->hasRole('admin'))
-        @include('ownpage.pannel.admin')
-    @endif
+        {{-- Contenu selon le rôle --}}
+        @if (Auth::user()->hasRole('admin'))
+            @include('ownpage.pannel.admin')
+        @endif
 
-    @if(Auth::user()->hasRole('adminONG'))
-        @include('ownpage.pannel.adminONG')
-    @endif
+        @if (Auth::user()->hasRole('adminONG'))
+            @include('ownpage.pannel.adminONG')
+        @endif
 
-</div>
+
+
+
+    </div>
 @endsection

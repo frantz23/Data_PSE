@@ -112,7 +112,7 @@ class ActivityController extends Controller
             'project',
             'assignee'
         ])->where('organization_id', auth()->user()->organization_id)
-            ->paginate(12);
+            ->paginate(10);
 
         return view('ownpage.activityViews.index', ['activities' => $activities]);
     }

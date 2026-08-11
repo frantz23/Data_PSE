@@ -83,6 +83,10 @@
     <a class="nav-link" href="{{route('admin.indicatorvaluefile.index')}}">
         Indicatorvaluefiles
     </a>
+</li><li class="nav-item">
+    <a class="nav-link" href="{{route('admin.donor.index')}}">
+        Donors
+    </a>
 </li></ul>
                 </div>
             </nav>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashController;
+use App\Http\Controllers\DonorController;
 use App\Http\Controllers\IndicatorController;
 use App\Http\Controllers\IndicatorValueCommentController;
 use App\Http\Controllers\IndicatorvalueController;
@@ -61,6 +62,29 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/users/store', [UserController::class, 'storeUser'])->name('storeUser');
     Route::put('/users/update/{user}', [UserController::class, 'updateUser'])->name('updateUser');
     Route::delete('/users/delete/{user}', [UserController::class, 'deleteUser'])->name('deleteUser');
+
+    //Donor
+    Route::get('/donors', [DonorController::class, 'indexDonor'])->name('indexDonor');
+    Route::get('/donors/create', [DonorController::class, 'createDonor'])->name('createDonor');
+    Route::get('/donors/show/{id}', [DonorController::class, 'showDonor'])->name('showDonor');
+    Route::get('/donors/edit/{id}', [DonorController::class, 'editDonor'])->name('editDonor');
+    Route::post('/donors/store', [DonorController::class, 'storeDonor'])->name('storeDonor');
+    Route::put('/donors/update/{donor}', [DonorController::class, 'updateDonor'])->name('updateDonor');
+    Route::delete('/donors/delete/{donor}', [DonorController::class, 'deleteDonor'])->name('deleteDonor');
+
+
+
+});
+
+
+Route::middleware(['auth', 'is_donor'])->group(function () {
+
+    Route::get('/bailleur/dashboard', [DonorController::class, 'donorDashboard'])->name('donorDashboard');
+    Route::get('/bailleur/show/{id}',  [DonorController::class, 'showProgram'])->name('Programdonor');
+    Route::get('/bailleur/project_dashboard/{id}', [DashController::class, 'dashboard'])->name('project_dashboard_Donor');
+
+
+
 });
 
 Route::middleware(['adminONG', 'auth'])->group(function () {
@@ -367,3 +391,31 @@ Route::prefix('admin')->name('admin.')->group(function () {
 //         return 'Erreur : ' . $e->getMessage();
 //     }
 // });
+
+Route::prefix('admin')->name('admin.')->group(function(){
+
+    //Get Donors datas
+    Route::get('/donors', 'App\Http\Controllers\DonorController@index')->name('donor.index');
+
+    //Show Donor by Id
+    Route::get('/donors/show/{id}', 'App\Http\Controllers\DonorController@show')->name('donor.show');
+
+    //Get Donors by Id
+    Route::get('/donors/create', 'App\Http\Controllers\DonorController@create')->name('donor.create');
+
+    //Edit Donor by Id
+    Route::get('/donors/edit/{id}', 'App\Http\Controllers\DonorController@edit')->name('donor.edit');
+
+    //Save new Donor
+    Route::post('/donors/store', 'App\Http\Controllers\DonorController@store')->name('donor.store');
+
+    //Update One Donor
+    Route::put('/donors/update/{donor}', 'App\Http\Controllers\DonorController@update')->name('donor.update');
+
+    //Update One Donor Speedly
+    Route::put('/donors/speed/{donor}', 'App\Http\Controllers\DonorController@updateSpeed')->name('donor.update.speed');
+
+    //Delete Donor
+    Route::delete('/donors/delete/{donor}', 'App\Http\Controllers\DonorController@delete')->name('donor.delete');
+
+});

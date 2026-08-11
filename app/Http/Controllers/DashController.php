@@ -125,7 +125,6 @@ class DashController extends Controller
         $latestValues = IndicatorValue::whereIn('indicator_id', $indicatorIds)
             ->with(['indicator', 'user'])
             ->orderBy('reporting_date', 'desc')
-            ->take(5)
             ->get();
 
         // 5. Derniers justificatifs/documents déposés (Top 5)
@@ -134,7 +133,6 @@ class DashController extends Controller
         })
             ->with(['indicatorvalue.indicator', 'user'])
             ->latest()
-            ->take(5)
             ->get();
 
         $indicators = $project->indicators;

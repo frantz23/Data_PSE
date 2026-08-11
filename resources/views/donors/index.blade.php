@@ -6,7 +6,7 @@
 
 @section('content')
 <div >
-<h3> Activities Details</h3>
+<h3> Donors Details</h3>
 
 <div class="d-flex justify-content-end">
     <div class="dropdown m-1">
@@ -16,54 +16,56 @@
         </button>
         <div id="columnSelector" class="dropdown-menu"> </div>
     </div>
-    <a href="{{ route('admin.activity.create') }}" class="btn btn-success m-1">
+    <a href="{{ route('admin.donor.create') }}" class="btn btn-success m-1">
 
-            Create Activity
+            Create Donor
 
     </a>
 </div>
 <div class="">
     <div class="card-body">
     <div class="table-responsive">
-        <table  id="Activity" class="table">
+        <table  id="Donor" class="table">
             <thead>
                 <tr>
                     <th scope="col">N#</th>
+						<th scope="col">Code</th>
 						<th scope="col">Name</th>
-						<th scope="col">Description</th>
-						<th scope="col">Budget</th>
-						<th scope="col">Start_date</th>
-						<th scope="col">End_date</th>
-						<th scope="col">Status</th>
-						<th scope="col">Completion_rate</th>
-						<th scope="col">User_id</th>
-						<th scope="col">Assigned_to</th>
-						<th scope="col">Parent_activity_id</th>
-
+						<th scope="col">Type</th>
+						<th scope="col">Email</th>
+						<th scope="col">Phone</th>
+						<th scope="col">Website</th>
+						<th scope="col">Address</th>
+						<th scope="col">Logo</th>
+						<th scope="col">IsActive</th>
+						
 						<th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($activities as $activity)
-						<tr><td>{{ $activity->id }}</td>
-							<td>{{ $activity->name }}</td>
-							<td>{{ $activity->description }}</td>
-							<td>{{ $activity->budget }}</td>
-							<td>{{ $activity->start_date }}</td>
-							<td>{{ $activity->end_date }}</td>
-							<td>{{ $activity->status }}</td>
-							<td>{{ $activity->completion_rate }}</td>
-							<td>{{ $activity->user_id }}</td>
-							<td>{{ $activity->assigned_to }}</td>
-							<td>{{ $activity->parent_activity_id }}</td>
+                @foreach($donors as $donor)
+						<tr><td>{{ $donor->id }}</td>
+							<td>{{ $donor->code }}</td>
+							<td>{{ $donor->name }}</td>
+							<td>{{ $donor->type }}</td>
+							<td>{{ $donor->email }}</td>
+							<td>{{ $donor->phone }}</td>
+							<td>{{ $donor->website }}</td>
+							<td>{{ $donor->address }}</td>
+							<td>{{ $donor->logo }}</td>
+							    <td>
+    <div class="form-check form-switch">
+        <input name="isActive" id="isActive" data-id="{{$donor->id}}" value="true" data-bs-toggle="toggle"  {{ isset($donor) && $donor->isActive == 'true' ? 'checked' : '' }} class="form-check-input" type="checkbox" role="switch" />
+    </div>
+</td>
 						<td>
-                    <a href="{{ route('admin.activity.show', ['id' => $activity->id]) }}" class="btn btn-primary btn-sm">
+                    <a href="{{ route('admin.donor.show', ['id' => $donor->id]) }}" class="btn btn-primary btn-sm">
                         <i class="fa-solid fa-eye"></i>
                     </a>
-                    <a href="{{ route('admin.activity.edit', ['id' => $activity->id]) }}" class="btn btn-success btn-sm">
+                    <a href="{{ route('admin.donor.edit', ['id' => $donor->id]) }}" class="btn btn-success btn-sm">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </a>
-                    <a href="#" data-id="{{ $activity->id }}" class="btn btn-danger btn-sm deleteBtn">
+                    <a href="#" data-id="{{ $donor->id }}" class="btn btn-danger btn-sm deleteBtn">
                         <i class="fa-solid fa-trash"></i>
                     </a>
                 </td>
@@ -73,7 +75,10 @@
         </table>
     </div>
 
-
+        <!-- Pagination -->
+        <div class="d-flex justify-content-center">
+            {{ $donors->links('pagination::bootstrap-5') }}
+        </div>
     </div>
 </div>
 </div>
@@ -99,7 +104,7 @@
     </div>
 @endsection
 @section('scripts')
-
+   
     <script>
         const checkboxs = document.querySelectorAll('input[type="checkbox"]')
 
@@ -111,7 +116,7 @@
             console.log({ checked, name, id });
             const data = { [name]: checked.toString() };
             const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-            const response = await fetch('/admin/activities/speed/' + id, {
+            const response = await fetch('/admin/donors/speed/' + id, {
                 method: 'PUT',
                 body: JSON.stringify(data), // Utilisation de JSON.stringify au lieu de JSON.stringfy
                 headers: {
@@ -121,7 +126,7 @@
             });
         };
         })
-
+        
         const deleteButtons = document.querySelectorAll('.deleteBtn')
         deleteButtons.forEach(deleteButton => {
             deleteButton.addEventListener('click', (event)=>{
@@ -136,7 +141,7 @@
 
                 confirmDeleteBtn.addEventListener('click',async ()=>{
                     const csrfToken = document.head.querySelector('meta[name="csrf-token"]').content;
-                    const response = await fetch('/admin/activities/delete/'+id , {
+                    const response = await fetch('/admin/donors/delete/'+id , {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -157,7 +162,7 @@
 
         });
         document.addEventListener('DOMContentLoaded', function() {
-            const tableHeaders = document.querySelectorAll('#Activity th');
+            const tableHeaders = document.querySelectorAll('#Donor th');
             const columnSelector = document.getElementById('columnSelector');
 
             tableHeaders.forEach(function(header, index) {
@@ -172,7 +177,7 @@
                 checkbox.role="switch"
                 checkbox.className = 'columnSelector form-check-input';
                 checkbox.dataset.column = index;
-                const savedSelection = localStorage.getItem('selectedColumns#Activity');
+                const savedSelection = localStorage.getItem('selectedColumns#Donor');
                 checkbox.checked = !!!savedSelection; // Sélectionner par défaut
                 checkbox.addEventListener('change', function() {
                     const columnIndex = parseInt(checkbox.dataset.column);
@@ -215,7 +220,7 @@
         });
 
         function toggleColumn(columnIndex, show) {
-            const dataTable = document.getElementById('Activity');
+            const dataTable = document.getElementById('Donor');
             const cells = dataTable.querySelectorAll(
                 `tr td:nth-child(${columnIndex + 1}), th:nth-child(${columnIndex + 1})`);
 
@@ -232,11 +237,11 @@
             const selectedColumns = Array.from(document.querySelectorAll('.columnSelector'))
                 .filter(c => c.checked)
                 .map(c => c.dataset.column);
-            localStorage.setItem('selectedColumns#Activity', JSON.stringify(selectedColumns));
+            localStorage.setItem('selectedColumns#Donor', JSON.stringify(selectedColumns));
         }
 
         function loadSavedSelection() {
-            const savedSelection = localStorage.getItem('selectedColumns#Activity');
+            const savedSelection = localStorage.getItem('selectedColumns#Donor');
             if (savedSelection) {
                 const selectedColumns = JSON.parse(savedSelection);
                 selectedColumns.forEach(function(columnIndex) {
@@ -250,7 +255,7 @@
         }
 
         function sortTable(columnIndex) {
-            const table = document.getElementById('Activity');
+            const table = document.getElementById('Donor');
             const rows = Array.from(table.querySelectorAll('tbody tr'));
 
             console.log({rows});
